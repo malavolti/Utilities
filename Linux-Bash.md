@@ -50,6 +50,7 @@ sudo deluser username sudo
 ### How to remove an user from the system completely
 
 ```bash
+sudo apt install perl-modules
 sudo deluser --remove-home username
 ```
 
