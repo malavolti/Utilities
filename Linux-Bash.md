@@ -2,13 +2,13 @@
 
 ## Table of Contents
 
-1. [Add a new user and provide SSH access to him](#add-new-ssh-user)
-2. [Add/Remove an user to 'sudo'(ROOT) user group](#addremove-an-user-to-sudo-root-user-group)
-3. [Remove an user from the system completely](#remove-an-user-from-the-system-completely)
-4. [Find out useful info of your machine](#find-out-useful-info-of-your-machine)
-5. [Add nice features to Vim](#add-nice-features-to-vim)
-6. [Enable SHELL colors](#enable-shell-colors)
-7. [Change the Hostname name](#change-the-hostname-name)
+1. [How to add a new user and provide SSH access to him](#how-to-add-new-ssh-user)
+2. [How to add/remove an user to 'sudo'(ROOT) user group](#how-to-addremove-an-user-to-sudo-root-user-group)
+3. [How to remove an user from the system completely](#how-to-remove-an-user-from-the-system-completely)
+4. [How to find out useful info of your machine](#howt-to-find-out-useful-info-of-your-machine)
+5. [How to add nice features to Vim](#how-to-add-nice-features-to-vim)
+6. [How to enable SHELL colors](#how-to-enable-shell-colors)
+7. [How to change the Hostname name](#how-to-change-the-hostname-name)
 8. [How to maintain SSH session open](#how-to-maintain-ssh-session-open)
 9. [How to download a file and save it on a specific path](#how-to-download-a-file-and-save-it-on-a-specific-path)
 10. [How to remove a file that starting with '-' or '--'](#how-to-find-specific-files-in-a-path-and-remove-them)
@@ -24,7 +24,7 @@
 20. [How to watch the behaviour of a directory](#how-to-watch-the-behaviour-of-a-directory)
 21. [How to send emails from the machine (Internet Site)](#how-to-send-emails-from-the-machine-internet-site)
 
-### Add new SSH user 
+### How to add a new user and provide SSH access to him 
 
 This example shows how to add the user "username" and enable him to SSH access.
 
@@ -37,7 +37,7 @@ sudo systemctl reload ssh.service
 ```
 (paste the '```id_rsa.pub```' of the new user into his '```authorized_keys```' file)
 
-### Add/Remove an user to 'sudo' (ROOT) user group
+### How to add/remove an user to 'sudo'(ROOT) user group
 
 ```bash
 sudo adduser username sudo
@@ -47,19 +47,19 @@ sudo adduser username sudo
 sudo deluser username sudo
 ```
 
-### Remove an user from the system completely
+### How to remove an user from the system completely
 
 ```bash
 sudo deluser --remove-home username
 ```
 
-### Find out useful info of your machine
+### How to find out useful info of your machine
 
 ```bash
 sudo lsb_release -a
 ```
 
-### Add nice features to Vim
+### How to add nice features to Vim
 
 ```bash
 sudo vim /etc/vim/vimrc
@@ -101,7 +101,7 @@ function! XTermPasteBegin()
 endfunction
 ```
 
-### Enable SHELL colors
+### How to enable SHELL colors
 
 ```bash
 sudo vim /root/.bashrc
@@ -136,7 +136,7 @@ if [ -f /etc/bash_completion.d ] && ! shopt -oq posix; then
 fi
 ```
 
-### Change the Hostname name
+### How to change the Hostname name
 
 1. Change opportunely the '```/etc/hosts```' file:
 	 ```bash
