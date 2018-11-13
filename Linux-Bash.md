@@ -2,10 +2,10 @@
 
 ## Table of Contents
 
-1. [How to add a new user and provide SSH access to him](#how-to-add-new-ssh-user)
-2. [How to add/remove an user to 'sudo'(ROOT) user group](#how-to-addremove-an-user-to-sudo-root-user-group)
+1. [How to add a new user and provide SSH access to him](#how-to-add-a-new-user-and-provide-ssh-access-to-him)
+2. [How to add/remove an user to 'sudo'(ROOT) user group](#how-to-addremove-an-user-to-sudoroot-user-group)
 3. [How to remove an user from the system completely](#how-to-remove-an-user-from-the-system-completely)
-4. [How to find out useful info of your machine](#howt-to-find-out-useful-info-of-your-machine)
+4. [How to find out useful info of your machine](#how-to-find-out-useful-info-of-your-machine)
 5. [How to add nice features to Vim](#how-to-add-nice-features-to-vim)
 6. [How to enable SHELL colors](#how-to-enable-shell-colors)
 7. [How to change the Hostname name](#how-to-change-the-hostname-name)
@@ -23,6 +23,9 @@
 19. [How to resize images from terminal](#how-to-resize-images-from-terminal)
 20. [How to watch the behaviour of a directory](#how-to-watch-the-behaviour-of-a-directory)
 21. [How to send emails from the machine (Internet Site)](#how-to-send-emails-from-the-machine-internet-site)
+22. [How to format and mount a new hard disk](#how-to-format-and-mount-a-new-hard-disk)
+23. [How to remove a partition from an hard disk](#how-to-remove-a-partition-from-an-hard-disk)
+24. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -299,3 +302,54 @@ watch -n 1 "ls -altr /tmp"
    ```bash
    echo "Body Text" | mail -s "Mail Subject" your.real.email@domain.changeme
    ```
+### How to format and mount a new hard disk
+
+1. Find out the disk with:
+   * `fdisk -l`
+   
+2. Create a new partition on that disk:
+   * `fisk /dev/sdb`
+     * press '`n`' (to create a new partition)
+     * press '`p`' (to select to create a new primary partition)
+     * press '`1`' (to select to create only one partition)
+     * press '`Enter`' more than one time to keep the default values proposed
+     * press '`wq`' + '`Enter`' to write changes on the partitions table.
+     
+3. Format the new partition into EXT4:
+   * `mkfs.ext4 /dev/sdb1`
+   
+4. Create the directory where the new hard disk will be mounted:
+   * `mkdir /data`
+
+5. Modify the `/etc/fstab` to made changes permanent
+   * `echo /dev/sdb1 /data ext4  defaults,noatime,nodiratime,relatime 0 0 >> /etc/fstab`
+
+6. Mount the new Hard disk into the destination directory:
+   * `mount -a`
+
+### How to remove a partition from an hard disk
+
+1. Unmount the partition
+   * `umount /dev/sdb1`
+
+2. Remove the partition
+   * `fdisk /dev/sdb`
+     * press '`d`' (to delete partition)
+     * press '`wq`' + '`Enter`' to write changes on the partitions table.
+
+3. Modify the `/etc/fstab` to made changes permanent by removing his line.
+
+### How to create and use a swapfile
+
+1. Reserve space for the SWAP file (1M * 2048 = 2048 MB = 2 GB):
+  * `sudo dd if=/dev/zero of=/swapfile bs=1M count=2048`
+
+2. Create the swapfile:
+  * `sudo chmod 600 /swapfile`
+  * `sudo mkswap /swapfile`
+  
+3. Modify the `/etc/fstab` to made changes permanent
+  * `sudo echo '/swapfile  none  swap  sw 0 0' >> /etc/fstab`
+  
+4. Enable SWAP (use '`swapon -s` to check that works)
+  `sudo swapon /swapfile`
