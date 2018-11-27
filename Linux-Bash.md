@@ -26,7 +26,7 @@
 22. [How to format and mount a new hard disk](#how-to-format-and-mount-a-new-hard-disk)
 23. [How to remove a partition from an hard disk](#how-to-remove-a-partition-from-an-hard-disk)
 24. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
-25. [How to comment/uncomment an entire block of text on Vim](#how-to-comment/uncomment-an-entire-block-of-text-on-vim)
+25. [How to comment/uncomment an entire block of text on Vim](#how-to-commentuncomment-an-entire-block-of-code-on-vim)
 
 ### How to add a new user and provide SSH access to him 
 
