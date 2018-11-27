@@ -26,6 +26,7 @@
 22. [How to format and mount a new hard disk](#how-to-format-and-mount-a-new-hard-disk)
 23. [How to remove a partition from an hard disk](#how-to-remove-a-partition-from-an-hard-disk)
 24. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
+25. [How to comment/uncomment an entire block of text on Vim](#how-to-comment/uncomment-an-entire-block-of-text-on-vim)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -353,3 +354,15 @@ watch -n 1 "ls -altr /tmp"
   
 4. Enable SWAP (use '`swapon -s` to check that works)
   `sudo swapon /swapfile`
+
+### How to comment/uncomment an entire block of code on Vim
+
+For commenting a block of text:
+1. Put your cursor on the first character you want to comment
+2. Press 'Ctrl+V' and go up/down until the last commented line
+3. Press 'Shift+I' and then press '#'. This will add a hash to the first line.
+4. Press Esc (give it a second) and it will insert a # character on all other selected lines.
+
+For uncommenting a block of text:
+1. Put your cursor on the first character you want to uncomment
+2. Press 'Ctrl+V' and go down until the last commented line and press 'x', that will delete all the # characters vertically.
