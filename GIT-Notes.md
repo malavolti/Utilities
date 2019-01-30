@@ -352,7 +352,10 @@ OR
       
    * ```git revert b96b657573d7126c13c4f212f79d9c71d203e20e```
    * ```git push origin master```
-   
+
+5. Undo the last commit (before push and without lose changes):
+   * ```git reset --soft HEAD~1```
+
 ## Showing your remote server (git remote)
 
    * ```git remote -v```
