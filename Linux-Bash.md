@@ -27,6 +27,7 @@
 23. [How to remove a partition from an hard disk](#how-to-remove-a-partition-from-an-hard-disk)
 24. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
 25. [How to comment/uncomment an entire block of text on Vim](#how-to-commentuncomment-an-entire-block-of-code-on-vim)
+26. [How to remove files older than one year](#how-to-remove-files-older-than-one-year)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -366,3 +367,7 @@ For commenting a block of text:
 For uncommenting a block of text:
 1. Put your cursor on the first character you want to uncomment
 2. Press 'Ctrl+V' and go down until the last commented line and press 'x', that will delete all the # characters vertically.
+
+### How to remove files older than one year
+
+`find /path/to/files/* -mtime +365 -delete`
