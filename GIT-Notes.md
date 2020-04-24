@@ -26,6 +26,7 @@ Here you will find my notes on GIT
 21. [Tagging](#tagging)
 22. [Branching - Useful to solve problems without touch the master branch until the resolution](#branching---useful-to-solve-problems-without-touch-the-master-branch-until-the-resolution)
 23. [Working with pull requests](#working-with-pull-requests)
+24. [How to clean bad data out of your Git repository history](#how-to-clean-bad-data-out-of-your-git-repository-history)
 
 # Fundamental
 
@@ -589,3 +590,30 @@ Glossary:
       1. ```git checkout master```
       2. ```git merge FETCH_HEAD```
       3. ```git push origin master```   (This will automatically accept the pull request)
+      
+## How To clean bad data out of your Git repository history
+
+By default the BFG doesn't modify the contents of your latest commit on your master (or 'HEAD') branch, even though it will clean all the commits before it.
+Once you've committed your changes- and your latest commit is clean with none of the undesired data in it - you can run the BFG to perform it's simple deletion operations over all your historical commits.
+
+1. Download BFG and rename it into "`bfg.jar`":
+   * If you use Java 7: http://repo1.maven.org/maven2/com/madgag/bfg/1.12.16/bfg-1.12.16.jar
+   * If you use Java > 7: https://rtyley.github.io/bfg-repo-cleaner/
+   
+2. Clone a fresh copy of your repo, using the --mirror flag:
+   * `git clone --mirror git://example.com/my-repo.git`
+   
+   (This is a bare repo, which means your normal files won't be visible, but it is a full copy of the Git database of your repository, and at this point you should make a backup of it to ensure you don't lose anything.)
+
+3. Remove all files named "**id_rsa**" or "**id_rsa**" from your repo: 
+   * `bfg --delete-files id_{dsa,rsa}  my-repo.git`
+
+4. Apply changes to your local repo:
+   * `cd my-repo.git`
+   * `git reflog expire --expire=now --all && git gc --prune=now --aggressive`
+
+5. Apply changes to your remote repo:
+   * `cd my-repo.git`
+   * `git push`
+
+Documentation on BFG 1.13.0: https://repository.sonatype.org/service/local/repositories/central-proxy/content/com/madgag/bfg/1.13.0/bfg-1.13.0.txt
