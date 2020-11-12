@@ -28,6 +28,7 @@
 24. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
 25. [How to comment/uncomment an entire block of text on Vim](#how-to-commentuncomment-an-entire-block-of-code-on-vim)
 26. [How to remove files older than one year](#how-to-remove-files-older-than-one-year)
+27. [How to copy directory without losing timestamps](#how-to-copy-directory-without-losing-timestamps)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -371,3 +372,7 @@ For uncommenting a block of text:
 ### How to remove files older than one year
 
 `find /path/to/files/* -mtime +365 -delete`
+
+### How to copy directory without losing timestamps
+
+`sudo cp -rp /source/path /dest/path`
