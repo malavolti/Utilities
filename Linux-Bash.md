@@ -30,6 +30,7 @@
 26. [How to remove files older than one year](#how-to-remove-files-older-than-one-year)
 27. [How to copy directory without losing timestamps](#how-to-copy-directory-without-losing-timestamps)
 28. [How to find something with grep by excluding multiple things](#how-to-find-something-with-grep-by-excluding-multiple-things)
+29. [How to copy text files without losing data](#how-to-copy-text-files-without-loging-data)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -383,3 +384,17 @@ For uncommenting a block of text:
 This grep will find the word "beta" in the current directory `.` without considering `path-dir-1,path-dir-2,path-dir-3` and hidden files, XML files or `error_log` file.
 
 `grep -r --exclude-dir={path-dir-1,path-dir-2,path-dir-3} --exclude={.*,*.xml,error_log} "beta" .`
+
+### How to copy text files without losing data
+
+1. Create the base64 version of the file: 
+   ```bash
+   base64 file.ext
+   ```
+
+2. Copy the output generated
+
+3. Generate the new file from the Base64 value:
+   * `vim encoded_file.ext`
+   * Paste the content copied and save it on the file
+   * `base64 -d encoded_file.ext > file.ext`
