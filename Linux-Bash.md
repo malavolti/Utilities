@@ -30,7 +30,7 @@
 26. [How to remove files older than one year](#how-to-remove-files-older-than-one-year)
 27. [How to copy directory without losing timestamps](#how-to-copy-directory-without-losing-timestamps)
 28. [How to find something with grep by excluding multiple things](#how-to-find-something-with-grep-by-excluding-multiple-things)
-29. [How to copy text files without losing data](#how-to-copy-text-files-without-loging-data)
+29. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
 
 ### How to add a new user and provide SSH access to him 
 
