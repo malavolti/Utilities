@@ -347,14 +347,14 @@ watch -n 1 "ls -altr /tmp"
 ### How to create and use a swapfile
 
 1. Reserve space for the SWAP file (1M * 2048 = 2048 MB = 2 GB):
-  * `sudo dd if=/dev/zero of=/swapfile bs=1M count=2048`
+   * `sudo dd if=/dev/zero of=/swapfile bs=1M count=2048`
 
 2. Create the swapfile:
-  * `sudo chmod 600 /swapfile`
-  * `sudo mkswap /swapfile`
+   * `sudo chmod 600 /swapfile`
+   * `sudo mkswap /swapfile`
   
 3. Modify the `/etc/fstab` to made changes permanent
-  * `sudo echo '/swapfile  none  swap  sw 0 0' >> /etc/fstab`
+   * `sudo echo '/swapfile  none  swap  sw 0 0' >> /etc/fstab`
   
 4. Enable SWAP (use '`swapon -s` to check that works)
   `sudo swapon /swapfile`
