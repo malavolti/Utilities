@@ -606,7 +606,7 @@ Once you've committed your changes- and your latest commit is clean with none of
    (This is a bare repo, which means your normal files won't be visible, but it is a full copy of the Git database of your repository, and at this point you should make a backup of it to ensure you don't lose anything.)
 
 3. Remove all files named "**id_rsa**" or "**id_rsa**" from your repo: 
-   * `bfg --delete-files id_{dsa,rsa}  my-repo.git`
+   * `java -jar bfg.jar --delete-files id_{dsa,rsa}  my-repo.git`
 
 4. Apply changes to your local repo:
    * `cd my-repo.git`
