@@ -32,6 +32,7 @@
 28. [How to find something with grep by excluding multiple things](#how-to-find-something-with-grep-by-excluding-multiple-things)
 29. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
 30. [How to format an XML file](#how-to-format-an-xml-file)
+31. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -403,3 +404,7 @@ This grep will find the word "beta" in the current directory `.` without conside
 ### How to format an XML file
 
 * `xmllint --format ugly.xml --output pretty.xml`
+
+### How to check certificate on specific port
+
+* `openssl s_client -connect www.paypal.com:443`
