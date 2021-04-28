@@ -33,6 +33,7 @@
 29. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
 30. [How to format an XML file](#how-to-format-an-xml-file)
 31. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
+32. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc-all-cannot-change-locale)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -408,3 +409,15 @@ This grep will find the word "beta" in the current directory `.` without conside
 ### How to check certificate on specific port
 
 * `openssl s_client -connect www.paypal.com:443`
+
+### How to fix warning: setlocale: LC_ALL: cannot change locale
+
+* `sudo locale -a`   (and discover which locale you have enabled)
+* `sudo vim /etc/environment` (and paste into `LANG` and `LC_ALL` the locale you want)
+  
+  ```bash
+  LANG=en_GB.utf8
+  LC_ALL=en_GB.utf8
+  ```
+
+* Then exit and enter again to server
