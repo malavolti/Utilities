@@ -33,7 +33,7 @@
 29. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
 30. [How to format an XML file](#how-to-format-an-xml-file)
 31. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
-32. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc-all-cannot-change-locale)
+32. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
 
 ### How to add a new user and provide SSH access to him 
 
