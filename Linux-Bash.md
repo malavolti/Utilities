@@ -421,3 +421,9 @@ This grep will find the word "beta" in the current directory `.` without conside
   ```
 
 * Then exit and enter again to server
+
+IF `sudo locale -a` returns only `C`, `C.UTF-8` and `POSIZ` run the following commands:
+
+* `sudo vim /etc/locale.gen` (and uncomment the locales preferred)
+* `sudo locale-gen` (to generate locales selected)
+* `sudo locale -a` (to check the locales generation)
