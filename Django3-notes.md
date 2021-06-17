@@ -1022,3 +1022,45 @@ Obiettivo: Memorizzare quanto inserito dall'utente limitatamente ai campi che de
    ```
 
 5. Apro la pagina `/create` e vedo la mia nuova Form. Dentro vi potrò scrivere quello che serve e salvarlo nel DB gestito da Django.
+
+
+## Elencare tutti gli oggetti creati da un utente
+
+* `views.py`:
+
+  * Importo il modello `Todo` con:
+    
+    ```python
+    from .models import Todo
+    ```
+
+  * Restituisco al template tutti i `Todo` creati:
+
+    ```python
+     def currenttodos(request):
+         # 'datecompleted__isnull=True' serve per non visualizzare l'oggetto dopo una certa data.
+         todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+         dictRender = {'todos': todos}
+         return render(request, 'todo/currenttodos.html', dictRender)
+    ```
+
+* `todo/templates/currenttodos.html`:
+
+  ```html
+  {% extends 'todo/base.html' %}
+
+  {% block content %}
+
+  <h1>CURRENT TODOS</h1>
+
+  <ul>
+      {% for todo in todos %}
+      <li>
+          {% if todo.important %}<strong>{% endif %}{{ todo.title }}{% if todos.important %}</strong>{% endif %}
+          {% if todo.memo %}- {{ todo.memo }}</p>{% endif %}
+      </li>
+      {% endfor %}
+  </ul>
+
+  {% endblock %}
+  ```
