@@ -22,6 +22,7 @@
 20. [Usare settings diversi in produzione e in development](#usare-settings-diversi-in-produzione-e-in-development)
 21. [Autenticazione degli utenti](#autenticazione-degli-utenti)
 22. [Models e relazioni con gli utenti](#models-e-relazioni-con-gli-utenti)
+23. [Creare una custom Form](#creare-una-custom-form)
 
 ## Django installation
 
@@ -137,10 +138,10 @@ La Apps esse sono i moduli in cui si può dividere il progetto.
     from django.shortcuts import render
 
     def tmpl_example(request):
-        tmpl_dict = {
+        renderDict = {
             'password':'dcndocndosnd',
         }
-        return render(request, 'generator/tmpl-example.html', tmpl_dict)
+        return render(request, 'generator/tmpl-example.html', renderDict)
     ```
 
 * Modifico le `urls.py` per abilitare il path della Homepage
@@ -198,13 +199,13 @@ La Apps esse sono i moduli in cui si può dividere il progetto.
 
     # Render a Page that obtain values from parameters (request.GET.get('<param_name'))
     def new_password(request):
-       pwd_dict = {
+       renderDict = {
           'length' : int(request.GET.get('length')),
           'special' : 'no',
           'numbers' : 'no'
        }
 
-       return render(request, 'generator/new-password.html', pwd_dict)    
+       return render(request, 'generator/new-password.html', renderDict)    
     
     def form(requests):
         return render(request, 'generator/form.html')
@@ -451,8 +452,8 @@ Ma per poter utilizzare i file memorizzati nel database legato al sito, c'è bis
 
     ```Python
     def homepage(request):
-    projects = Project.objects.order_by('-date')
-    return render(request, 'portfolio/homepage.html', {'projects': projects})
+        projects = Project.objects.order_by('-date')
+        return render(request, 'portfolio/homepage.html', {'projects': projects})
     ```
     
 * Se voglio visualizzare solo 4 oggetti alla volta:
@@ -460,8 +461,8 @@ Ma per poter utilizzare i file memorizzati nel database legato al sito, c'è bis
 
     ```Python
     def homepage(request):
-    projects = Project.objects.all()[:4]
-    return render(request, 'portfolio/homepage.html', {'projects': projects})
+        projects = Project.objects.all()[:4]
+       return render(request, 'portfolio/homepage.html', {'projects': projects})
     ```
 
 * Se voglio visualizzare solo 4 oggetti alla volta ordinati per data:
@@ -469,8 +470,8 @@ Ma per poter utilizzare i file memorizzati nel database legato al sito, c'è bis
 
     ```Python
     def homepage(request):
-    projects = Project.objects.order_by('-date')[:5]
-    return render(request, 'portfolio/homepage.html', {'projects': projects})
+        projects = Project.objects.order_by('-date')[:5]
+        return render(request, 'portfolio/homepage.html', {'projects': projects})
     ```
 
 ## Contenuto Statico
@@ -606,7 +607,7 @@ Se si è interessati a modificare la visualizzazione di un valore, agire come in
 * Con `{{ article.date|date:"SHORT_DATE_FORMAT" }}` si ottiene una data nel formato "Mese/Giogno/Anno" (con 01,02,03,...)
 * Con `{{ article.date|date:"j-n-Y" }}` si ottiene una data nel formato "Giorno-Mese-Anno" (con 1, 2, 3, ...)
 * Con `{{ article.date|upper }}` si ottiene una data nel formato "Anno-Mese-Giorno" (con 01, 02, 03, ...)
-* Con {{ article.date }}` si ottiene una data nel formato "June 2, 2021"
+* Con `{{ article.date }}` si ottiene una data nel formato "June 2, 2021"
 * Con `{{ article.title|upper }}` si ottiene una testo tutto MAIUSCOLO
 * Con `{{ article.description|truncatechars:100 }}` si ottiene un testo troncato al centesimo carattere sostituendo il resto con dei "..."
 
@@ -761,9 +762,9 @@ Come sempre dovremo procedere per gradi:
 
       ```python
       def signupuser(request):
-          form = {'form': UserCreationForm()}
+          renderDict = {'form': UserCreationForm()}
           if request.method == 'GET':
-              return render(request, 'todo/signupuser.html', form)
+              return render(request, 'todo/signupuser.html', renderDict)
           else:
               # Controllo che le password inserite nella form coincidano.
               # 'password1' e 'password2' sono i name degli <input> che formano la form
@@ -784,24 +785,24 @@ Come sempre dovremo procedere per gradi:
                       # https://docs.djangoproject.com/en/3.2/topics/http/shortcuts/#redirect
                       return redirect('currenttodos')
                   except IntegrityError:
-                      form['error'] = 'Username già esistente. Scegliere altro valore.'
-                      return render(request, 'todo/signupuser.html', form)
+                      renderDict['error'] = 'Username già esistente. Scegliere altro valore.'
+                      return render(request, 'todo/signupuser.html', renderDict)
               else:
                   # Entro in questo else se le password inserite non coincidono
-                  form['error'] = 'Le password immesse non coincidono.'
-                  return render(request, 'todo/signupuser.html', form)
+                  renderDict['error'] = 'Le password immesse non coincidono.'
+                  return render(request, 'todo/signupuser.html', renderDict)
 
       def loginuser(request):
-          form = {'form': AuthenticationForm()}
+          renderDict = {'form': AuthenticationForm()}
           if request.method == 'GET':
-              return render(request, 'todo/loginuser.html', form)
+              return render(request, 'todo/loginuser.html', renderDict)
           else:
               # 'username' è il name della <input> destinata alla username che forma la form
               # 'password' è il name della <input> destinata alla password che forma la form
               user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
               if user is None:
-                  form['error'] = 'Utente e Password non trovati'
-                  return render(request, 'todo/loginuser.html', form)
+                  renderDict['error'] = 'Utente e Password non trovati'
+                  return render(request, 'todo/loginuser.html', renderDict)
               else:
                   # Accedo con l'utente
                   #
@@ -946,3 +947,78 @@ Questo esempio si basa sul modello `todowoos` che memorizza note per ciascun ute
   # Voglio vedere questo modello nell'interfaccia "admin/"
   admin.site.register(Todo)
   ```
+
+## Creare una custom Form
+
+Obiettivo: Memorizzare quanto inserito dall'utente limitatamente ai campi che desidero.
+
+1. Creo il path in `urls.py`:
+
+   ```python
+    # Create
+    path('create/', views.createtodo, name='createtodo')
+    ```
+
+2. Creo la nuova `TodoForm` in `todo/forms.py`:
+
+   ```python
+   # Ho importato i modello Todo per avere accesso ai suoi campi
+   from django.forms import ModelForm
+   from .models import Todo 
+
+
+   class TodoForm(ModelForm):
+       class Meta:
+           model = Todo
+           fields = ['title', 'memo', 'important']
+   ```
+
+   I fields/campi indicati saranno gli unici ad essere visualizzati.
+
+3. Creo la funzione `createtodo` in `views.py` che richiama la mia nuova `TodoForm`:
+
+   ```python
+   from .forms import TodoForm
+   # ...
+   def createtodo(request):
+       renderDict = {'form': TodoForm()}
+       if request.method == 'GET':
+           # Questo è il ramo seguito se non viene inviato alcun dato a Django, GET
+           return render(request, 'todo/createtodo.html', renderDict)
+       else:
+           try:
+               # Questo è il ramo seguito se vengono inviati dei dati a Django
+               form = TodoForm(request.POST)
+               # creo l'oggetto 'newtodo' prelevando i dati dalla form
+               # e con il 'commit=False' non salvo subito su DB quanto inviato alla form
+               newtodo = form.save(commit=False)
+               # aggiungo l'utente autore della creazione e salvo
+               newtodo.user = request.user
+               newtodo.save()
+               return redirect('currenttodos')
+           except ValueError:
+               renderDict['error'] = "Inserimento dati non corretto. Prova ancora!"
+               return render(request, 'todo/createtodo.html', renderDict)
+   ```
+
+4. Creo il template usato da `createtodo` in `templates/todo/createtodo.html`:
+
+   ```html
+   {% extends 'todo/base.html' %}
+
+   {% block content %}
+
+   <h1>Create</h1>
+
+   <h2>{{ error }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+
+    {% endblock %}
+   ```
+
+5. Apro la pagina `/create` e vedo la mia nuova Form. Dentro vi potrò scrivere quello che serve e salvarlo nel DB gestito da Django.
