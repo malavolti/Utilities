@@ -1,5 +1,28 @@
 # Django3 Udemy Course
 
+1. [Django installation](#django-installation)
+2. [Django running](#django-running)
+3. [Creare una nuova App per il progetto](#creare-una-nuova-app-per-il-progetto)
+4. [Creare la Homepage del sito](#creare-la-homepage-del-sito)
+5. [Creare e usare i Templates](#creare-e-usare-i-templates)
+6. [Creare e usare i Form](#creare-e-usare-i-form)
+7. [Django3 Admin interface](#django3-admin-interface)
+8. [Configurare la cartella 'media' e 'static' del sito](#configurare-la-cartella--media--e--static--del-sito)
+9. [Models e Database](#models-e-database)
+10. [Includere URL legate alle App (blog)](#includere-url-legate-alle-app--blog-)
+11. [Utilities di objects()](#utilities-di-objects--)
+12. [Contenuto Statico](#contenuto-statico)
+13. [Ad ogni articolo il giusto path](#ad-ogni-articolo-il-giusto-path)
+14. [Come ottenere il numero di oggetti creati su una pagina HTML](#come-ottenere-il-numero-di-oggetti-creati-su-una-pagina-html)
+15. [Come gestire le pluralità nel testo (inglese di default)](#come-gestire-le-pluralit--nel-testo--inglese-di-default-)
+16. [Funzioni Utili per la manipolazione dei valori visualizzati](#funzioni-utili-per-la-manipolazione-dei-valori-visualizzati)
+17. [Estendere un template base](#estendere-un-template-base)
+18. [Web Interface Utilities](#web-interface-utilities)
+19. [Source Code Utilities](#source-code-utilities)
+20. [Usare settings diversi in produzione e in development](#usare-settings-diversi-in-produzione-e-in-development)
+21. [Autenticazione degli utenti](#autenticazione-degli-utenti)
+22. [Models e relazioni con gli utenti](#models-e-relazioni-con-gli-utenti)
+
 ## Django installation
 
 * `sudo pip3 install django-admin`
@@ -202,7 +225,7 @@ La Apps esse sono i moduli in cui si può dividere il progetto.
 
 * Salvando vedrò immediatamente il risultato sulla mia homepage su `http://127.0.0.1:8000/form`
 
-# Django3 Admin interface
+## Django3 Admin interface - Creare il Superutente 'admin'
 
 * Creo il SuperUser in grado di accedere all'interfaccia "**/admin**":
   * `cd personal_portfolio-project`
@@ -665,3 +688,261 @@ Se si è interessati a modificare la visualizzazione di un valore, agire come in
 
 3. Avviare il server con:
    * `python3 migrate.py runserver`
+
+## Autenticazione degli utenti
+
+Come sempre dovremo procedere per gradi:
+
+1. Avviare il server di sviluppo:
+   * `python3 manage.py runserver`
+
+2. `*-project/settings.py`:
+
+   * Aggiungere la nuova app `todo` (nome dell'app) alle `INSTALLED_APPS`:
+
+     ```python
+     INSTALLED_APPS = [
+      'django.contrib.admin',
+      'django.contrib.auth',
+      'django.contrib.contenttypes',
+      'django.contrib.sessions',
+      'django.contrib.messages',
+      'django.contrib.staticfiles',
+      'todo',
+     ]
+     ```
+
+3. `*-project/urls.py`:
+
+   1. Importare le `views` dell'app:
+
+      ```python
+      from django.contrib import admin
+      from django.urls import path
+      from todo import views
+      ```
+
+   2. Decidere il path e assegnargli un nome univoco:
+
+      ```python
+      urlpatterns = [
+          path('admin/', admin.site.urls),
+
+          # Homepage
+          path('', views.homepage, name='homepage'),
+
+          # Sign Up
+          path('signup/', views.signupuser, name='signupuser'),
+
+          # Login
+          path('login/', views.loginuser, name='loginuser'),
+
+          # Logout
+          path('logout/', views.logoutuser, name='logoutuser'),
+         
+          # Another page
+          path('current/', views.currenttodos, name='currenttodos')
+      ]
+      ```
+
+4. `todo/views.py`:
+
+   1. Importare le librerire necessarie:
+
+      ```python
+      from django.shortcuts import render, redirect
+      from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+      from django.contrib.auth.models import User
+      from django.db import IntegrityError
+      from django.contrib.auth import login, logout, authenticate
+      ```
+
+   2. Definire le funzioni corrispondenti ai path di `urls.py`:
+
+      ```python
+      def signupuser(request):
+          form = {'form': UserCreationForm()}
+          if request.method == 'GET':
+              return render(request, 'todo/signupuser.html', form)
+          else:
+              # Controllo che le password inserite nella form coincidano.
+              # 'password1' e 'password2' sono i name degli <input> che formano la form
+              if request.POST['password1'] == request.POST['password2']:
+                  try:
+                      # Creo l'utente con username = 'username' e password = 'password1'
+                      # solo se le password inserite coincidono.
+                      #
+                      # https://docs.djangoproject.com/it/3.2/topics/auth/default/#creating-users
+                      user = User.objects.create_user(request.POST['username'], password=request.POST['password1'])
+                      user.save()
+                      # Accedo con l'utente
+                      #
+                      # https://docs.djangoproject.com/it/3.2/topics/auth/default/#how-to-log-a-user-in
+                      login(request, user)
+                      # Redirigo alla pagina che l'utente può vedere da autenticato.
+                      #
+                      # https://docs.djangoproject.com/en/3.2/topics/http/shortcuts/#redirect
+                      return redirect('currenttodos')
+                  except IntegrityError:
+                      form['error'] = 'Username già esistente. Scegliere altro valore.'
+                      return render(request, 'todo/signupuser.html', form)
+              else:
+                  # Entro in questo else se le password inserite non coincidono
+                  form['error'] = 'Le password immesse non coincidono.'
+                  return render(request, 'todo/signupuser.html', form)
+
+      def loginuser(request):
+          form = {'form': AuthenticationForm()}
+          if request.method == 'GET':
+              return render(request, 'todo/loginuser.html', form)
+          else:
+              # 'username' è il name della <input> destinata alla username che forma la form
+              # 'password' è il name della <input> destinata alla password che forma la form
+              user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+              if user is None:
+                  form['error'] = 'Utente e Password non trovati'
+                  return render(request, 'todo/loginuser.html', form)
+              else:
+                  # Accedo con l'utente
+                  #
+                  # https://docs.djangoproject.com/it/3.2/topics/auth/default/#how-to-log-a-user-in
+                  login(request, user)
+                  # Redirigo alla pagina che l'utente può vedere da autenticato.
+                  #
+                  # https://docs.djangoproject.com/en/3.2/topics/http/shortcuts/#redirect
+                  return redirect('currenttodos')
+
+      def logoutuser(request):
+          # E' importante che il Logout sia una POST altrimenti
+          # i browser web tenteranno di aprire la sua URL e
+          # automaticamente disconnetteranno l'utente loggato.
+          if request.method == 'POST':
+              logout(request)
+              return redirect('homepage')
+
+      def currenttodos(request):
+          return render(request, 'todo/currenttodos.html')
+
+      def homepage(request):
+          return render(request, 'todo/homepage.html')
+      ```
+
+5. `todo/templates/todo/<nomeTemplate>.html`
+
+   1. `base.html`: template di base da estendere. Servirà a visualizzare chi è loggato e permettergli il Logout.
+
+      ```html
+      {% if user.is_authenticated %}
+
+      Logged in as {{ user.username }}
+
+      <form method="POST" action="{% url 'logoutuser' %}">
+          {% csrf_token %}
+          <button type="submit">Logout</button>
+      </form>
+
+      {% else %}
+
+      <a href="{% url 'signupuser' %}">Sign Up</a>
+      <a href="{% url 'loginuser' %}">Login</a>
+
+      {% endif %}
+
+
+      {% block content %}{% endblock %}
+      ```
+
+   2. `signupuser.html`: template usato per la registrazione dell'utente e conseguente creazione del suo account su Django Admin.
+
+      ```html
+      {% extends 'todo/base.html' %}
+
+      {% block content %}
+      
+      <h1>Sign Up</h1>
+      
+      <h2>{{ error }}</h2>
+
+      <form method="POST">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit">Sign Up</button>
+      </form>
+      
+      {% endblock %}
+      ```
+
+      `.as_p` inserirà ogni elemento in un `<p>` TAG cambiandone la visualizzazione.
+
+   3. `currenttodos.html`: template usato per redirigere l'utente autenticato in uno spazio visibile solo a lui.
+
+      ```html
+      {% extends 'todo/base.html' %}
+
+      {% block content %}
+
+      <h1>CURRENT TODOS</h1>
+
+      {% endblock %}
+      ```
+
+   4. `homepage.html`: template usato per la Homepage del sito.
+
+      ```html
+      {% extends 'todo/base.html' %}
+
+      {% block content %}
+
+      <h1>This is the Homepage</h1>
+
+      {% endblock %}
+      ```
+
+6. Fermare il server di sviluppo e creare un utente superuser per l'accesso all'interfaccia amministrativa di Django:
+
+   * `python3 manage.py createsuperuser`
+
+7. Avviare nuovamente il server di sviluppo:
+
+   * `python3 manage.py runserver`
+
+## Models e relazioni con gli utenti
+
+Questo esempio si basa sul modello `todowoos` che memorizza note per ciascun utente autenticato.
+
+* `todo/models.py`
+
+  ```python
+  from django.db import models
+  from django.contrib.auth.models import User
+
+
+  class Todo(models.Model):
+      # Questa funzione permette di rinominare ogni nuovo oggetto
+      # con il suo titolo
+      def __str__(self):
+          return self.title
+
+      title = models.CharField(max_length=100)
+      memo = models.TextField(blank=True)
+      created = models.DateTimeField(auto_now_add=True)
+      # devo usare "blank=True" se voglio poter usare i campi vuoti
+      datecompleted = models.DateTimeField(null=True, blank=True)
+      important = models.BooleanField(default=False)
+      user = models.ForeignKey(User, on_delete=models.CASCADE)
+  ```
+
+* `todo/admin.py`:
+
+  ```python
+  from django.contrib import admin
+  from .models import Todo
+
+  
+  # Questa classe mostra i campi che non sono modificaili
+  class TodoAdmin(admin.ModelAdmin):
+      readonly_fields = ('created',)
+
+  # Voglio vedere questo modello nell'interfaccia "admin/"
+  admin.site.register(Todo)
+  ```
