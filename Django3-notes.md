@@ -23,6 +23,7 @@
 21. [Autenticazione degli utenti](#autenticazione-degli-utenti)
 22. [Models e relazioni con gli utenti](#models-e-relazioni-con-gli-utenti)
 23. [Creare una custom Form](#creare-una-custom-form)
+24. [Elencare tutti gli oggetti creati da un utente](#elencare-tutti-gli-oggetti-creati-da-un-utente)
 
 ## Django installation
 
