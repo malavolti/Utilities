@@ -25,6 +25,7 @@
 23. [Creare una custom Form](#creare-una-custom-form)
 24. [Elencare tutti gli oggetti creati da un utente](#elencare-tutti-gli-oggetti-creati-da-un-utente)
 25. [Come accedere agli oggetti di un utenti](#come-accedere-agli-oggetti-di-un-utenti)
+26. [Come modificare gli oggetti degli utenti](#come-modificare-gli-oggetti-degli-utenti)
 
 ## Django installation
 
@@ -1123,3 +1124,53 @@ Obiettivo: Memorizzare quanto inserito dall'utente limitatamente ai campi che de
    ```
 
 5. Visualizzare sul sito l'effetto dei collegamenti agli oggetti per ciascun utente.
+
+## Come modificare gli oggetti degli utenti
+
+Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare le Form e, più precisamente, la TodoForm custom usata per la creazione di nuovi todo.
+
+1. Modifico `views.py` per visualizzare le informazioni che si vogliono modificare direttamente in una TodoForm:
+
+   ```python
+   def viewtodo(request, todo_pk):
+       # Inizializzo il dizionario che userò per passare le informazioni al template 'viewtodo.html'
+       dict_render = {}
+       # Recupero l'oggetto con primary key (pk) pari a 'todo_pk' ed essere di proprietà dell'utente o restituisco un 404 se non esiste.
+       todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+       if request.method == 'GET':
+           # Aggiungo l'oggetto trovato al dizionario che userà il template
+           dict_render['todo'] = todo
+           # Creo una form che presenti le informazioni contenute nell'oggetto trovato
+           form = TodoForm(instance=todo)
+           # Aggiungo la form al dizionario che userà il template
+           dict_render['form'] = form
+           # Visualizzo il risultato
+           return render(request, 'todo/viewtodo.html', dict_render)
+       else:
+           try:
+               # Questo è il ramo seguito se vengono inviati dei dati a Django
+               form = TodoForm(request.POST, instance=todo)
+               form.save()
+               return redirect('currenttodos')
+           except ValueError:
+               dict_render['error'] = "Dati non corretti!"
+               return render(request, 'todo/viewtodo.html', dict_render)
+   ```
+
+2. Modifico il template `todo/viewtodo.html` per visualizzare la form:
+
+   ```html
+   {% extends 'todo/base.html' %}
+
+   {% block content %}
+
+   <form method="POST">
+       {% csrf_token %}
+       {{ form.as_p }}
+       <button type="submit">Save</button>
+   </form>
+
+   {% endblock %}
+   ```
+
+3. Visualizzo il risultato sul sito al path `todo/1`.
