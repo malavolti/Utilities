@@ -525,8 +525,8 @@ Se voglio raggiungere ogni articolo del mio blog usando le URL devo:
    # in cui ricevo un 404 se l'articolo con ID=article_id non è stato trovato
    # o la pagina dell'articolo composta da un template.
    def detail(request, article_id):
-       article = get_object_or_404(Article, pk=article_id)
-       return render(request, 'blog/detail.html', {'article':article})
+       articles = get_object_or_404(Article, pk=article_id)
+       return render(request, 'blog/detail.html', {'articles':articles})
    ```
 
 3. Creare il template `detail.html` per mostrare le informazioni sugli articoli:
