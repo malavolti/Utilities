@@ -24,6 +24,7 @@
 22. [Models e relazioni con gli utenti](#models-e-relazioni-con-gli-utenti)
 23. [Creare una custom Form](#creare-una-custom-form)
 24. [Elencare tutti gli oggetti creati da un utente](#elencare-tutti-gli-oggetti-creati-da-un-utente)
+25. [Come accedere agli oggetti di un utenti](#come-accedere-agli-oggetti-di-un-utenti)
 
 ## Django installation
 
@@ -1067,3 +1068,58 @@ Obiettivo: Memorizzare quanto inserito dall'utente limitatamente ai campi che de
 
   {% endblock %}
   ```
+
+## Come accedere agli oggetti di un utenti
+
+1. Si parte sempre da `urls.py` e si aggiunge un path:
+
+   * `path('todo/<int:todo_pk>', views.viewtodo, name='viewtodo')`
+
+     è un path dinamico che cambia in base alla primary key (`todo_pk`) di tipo intero.
+
+2. Poi si passa alle `views.py` dove si definisce la funzione `viewtodo` che prende in ingresso il `todo_pk` per l'estrazione e la visualizzazione di ogni singolo todo nel template `viewtodo.html`:
+
+   ```python
+   def viewtodo(request, todo_pk):
+       todo = get_object_or_404(Todo, pk=todo_pk)
+       dict_render = {'todo': todo}
+       return render(request, 'todo/viewtodo.html', dict_render)
+   ```
+
+3. Poi si crea il template `todo/viewtodo.html` per la visualizzazione del singolo todo:
+
+   ```html
+   {% extends 'todo/base.html' %}
+
+   {% block content %}
+
+   {{ todo.title }}
+   {{ todo.memo }}
+
+   {% endblock %}
+   ```
+
+4. Poi si completa il template `todo/currenttodo.html` per collegare i todo dell'utente ai relativi dettagli forniti da `viewtodo`. `todo.id` è l'identificativo numerico dell'oggetto ed è sempre disponibile **gratis**:
+
+   ```html
+   {% extends 'todo/base.html' %}
+
+   {% block content %}
+
+   <h1>CURRENT TODOS</h1>
+
+   <ul>
+       {% for todo in todos %}
+       <li>
+           <a href="{% url 'viewtodo' todo.id %}">
+           {% if todo.important %}<strong>{% endif %}{{ todo.title }}{% if todos.important %}</strong>{% endif %}
+           {% if todo.memo %}- {{ todo.memo }}</p>{% endif %}
+           </a>
+       </li>
+       {% endfor %}
+   </ul>
+
+   {% endblock %}
+   ```
+
+5. Visualizzare sul sito l'effetto dei collegamenti agli oggetti per ciascun utente.
