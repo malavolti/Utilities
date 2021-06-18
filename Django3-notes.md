@@ -542,19 +542,7 @@ Se voglio raggiungere ogni articolo del mio blog usando le URL devo:
 
 5. Per richiamare tutte le pagine degli articoli procedere come segue:
 
-   1. Modificare il template ove elencare gli articoli `all_blogs.html`:
-
-      ```html
-      {% for article in articles %}
-      
-      <a href="{% url 'blog:detail' article.id %}"><h2>{{ article.title }}</h2></a>
-
-      {% endfor %}
-      ```
-
-      Ogni `article` ha il suo `id` numerico: 1,2,3,4,... Quel numero è l'`article.id`. `blog:detail` indica il nome dato alla URL associata al template che si vuole usare con l'`article.id` (E.s.: blog/1, blog/2, ...)
-
-   2. Modificare `urls.py` aggiungendo `app_name = <nomeApp>`:
+   1. Modificare `urls.py` aggiungendo `app_name = <nomeApp>`:
 
       ```python
       from django.urls import path
@@ -568,11 +556,25 @@ Se voglio raggiungere ogni articolo del mio blog usando le URL devo:
       ]
       ```
       
-   3. Da questo momento in avanti tutte le direttive che vorranno usare i **name** definiti in `urls.py` dovranno usare il prefisso `app_name:`:
+      Da questo momento in avanti tutte le direttive che vorranno usare i **name** definiti in `urls.py` dovranno usare il prefisso `app_name:`:
       Esempio:
       
       * `app_name = paperino` (in `urls.py`)
       * `{% url 'paperino:<nameUrlPattern>'%}` (in `template.html`)
+
+   2. Modificare il template ove elencare gli articoli `all_blogs.html`:
+
+      ```html
+      {% for article in articles %}
+      
+      <a href="{% url 'blog:detail' article.id %}"><h2>{{ article.title }}</h2></a>
+
+      {% endfor %}
+      ```
+
+      Ogni `article` ha il suo `id` numerico: 1,2,3,4,... Quel numero è l'`article.id`. `blog:detail` indica il nome dato alla URL associata al template che si vuole usare con l'`article.id` (E.s.: blog/1, blog/2, ...)
+
+
 
 ## Come ottenere il numero di oggetti creati su una pagina HTML
 
