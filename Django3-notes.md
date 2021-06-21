@@ -1323,4 +1323,11 @@ Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare 
    LOGIN_URL = '/login'
    ```
    
+   trovata in `urls.py` come:
+
+   ```python
+   # Login
+   path('login/', views.loginuser, name='loginuser'),
+   ```
+
    Questo serve per proporre la login su ogni pagina che lo richiede.
