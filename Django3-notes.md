@@ -28,6 +28,7 @@
 26. [Come modificare gli oggetti degli utenti](#come-modificare-gli-oggetti-degli-utenti)
 27. [Come completare e cancellare un'azione](#come-completare-e-cancellare-unazione)
 28. [Come elencare task completati](#come-elencare-task-completati)
+29. [Come permettere ai soli utenti autenticati di usare certi path](#come-permettere-ai-soli-utenti-autenticati-di-usare-certi-path)
 
 ## Django installation
 
@@ -1249,10 +1250,12 @@ Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare 
 
    ```python
    def completedtodos(request):
-       # 'datecompleted__isnull=False' serve per visualizzare l'oggetto se è valorizzato.
-       todos = Todo.objects.filter(user=request.user, datecompleted__isnull=False)
+       # "datecompleted__isnull=False" serve per visualizzare l'oggetto se è valorizzato.
+       # "order_by('-datecompleted')" serve a stabilire l'ordine degli oggetti presentati.
+       # con il "-" prima del parametro, si ordina in senso contrario, dal più recente al meno recente.
+       todos = Todo.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
        dictRender = {'todos': todos}
-       return render(request, 'todo/completetodos.html', dictRender)
+       return render(request, 'todo/completedtodos.html', dictRender)
    ```
 
 3. Si crea il template che mostra il contenuto ottenuto da `completedtodos`:
@@ -1269,8 +1272,7 @@ Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare 
        <li>
            <a href="{% url 'viewtodo' todo.id %}">
            {% if todo.important %}<strong>{% endif %}{{ todo.title }}{% if todos.important %}</strong>{% endif %}
-           {% if todo.memo %}- {{ todo.memo }}</p>{% endif %}
-           {{ todo.datecompleted|date:'M j Y H:i' }}
+           {% if todo.memo %}- {{ todo.memo }}{% endif %} - {{ todo.datecompleted|date:'M j Y H:i' }}
            </a>
        </li>
        {% endfor %}
@@ -1278,3 +1280,47 @@ Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare 
 
    {% endblock %}
    ```
+
+## Come permettere ai soli utenti autenticati di usare certi path
+
+1. In `views.py`:
+
+   * Importo `login_required`:
+
+     ```python
+     from django.contrib.auth.decorators import login_required
+     ```
+
+   * Inserisco prima della definizione della funzione che utilizza il template della pagina di cui non voglio permettere l'accesso a utenti non autenticati, la parola `@login_require`:
+
+   ```python
+   @login_required()
+   def logoutuser(request):
+
+   @login_required()
+   def currenttodos(request):
+
+   @login_required()
+   def completedtodos(request):
+
+   @login_required()
+   def createtodo(request):
+
+   @login_required()
+   def viewtodo(request, todo_pk):
+
+   @login_required()
+   def completetodo(request, todo_pk):
+ 
+   @login_required()
+   def deletetodo(request, todo_pk):
+   
+   ```
+
+2. Aggiungo in fondo a `settings.py` il percorso per eseguire la login:
+
+   ```python
+   LOGIN_URL = '/login'
+   ```
+   
+   Questo serve per proporre la login su ogni pagina che lo richiede.
