@@ -26,6 +26,7 @@
 24. [Elencare tutti gli oggetti creati da un utente](#elencare-tutti-gli-oggetti-creati-da-un-utente)
 25. [Come accedere agli oggetti di un utenti](#come-accedere-agli-oggetti-di-un-utenti)
 26. [Come modificare gli oggetti degli utenti](#come-modificare-gli-oggetti-degli-utenti)
+27. [Come completare e cancellare un'azione](#come-completare-e-cancellare-un---azione)
 
 ## Django installation
 
@@ -1174,3 +1175,62 @@ Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare 
    ```
 
 3. Visualizzo il risultato sul sito al path `todo/1`.
+
+## Come completare e cancellare un'azione
+
+1. Aggiungo i nuovi path a `urls.py`
+
+   ```python
+   # CompleteTodo
+   path('todo/<int:todo_pk>/complete', views.completetodo, name='completetodo'),
+
+   # DeleteTodo
+   path('todo/<int:todo_pk>/delete', views.deletetodo, name='deletetodo')
+   ```
+
+2. Definisco le funzioni `completetodo` e `deletetodo` nel file `views.py`:
+
+   ```python
+   # Richiamando `currenttodos' gli oggetti che hanno il parametro "datecompleted" diverso da NULL verranno nascosti
+   def currenttodos(request):
+       # 'datecompleted__isnull=True' serve per non visualizzare l'oggetto se è valorizzato.
+       todos = Todo.objects.filter(user=request.user, datecompleted__isnull=True)
+       dictRender = {'todos': todos}
+       return render(request, 'todo/currenttodos.html', dictRender)
+
+   def completetodo(request, todo_pk):
+       dict_render = {}
+       # Recupero l'oggetto con primary key (pk) pari a 'todo_pk' o restituisco un 404 se non esiste
+       todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+       if request.method == 'POST':
+           # Questo è il modo in cui definisco completato un Todo: il tempo
+           todo.datecompleted = timezone.now()
+           todo.save()
+           return redirect('currenttodos')
+
+       return render(request, 'todo/viewtodo.html', dict_render)
+
+   def deletetodo(request, todo_pk):
+       dict_render = {}
+       # Recupero l'oggetto con primary key (pk) pari a 'todo_pk' o restituisco un 404 se non esiste
+       todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
+       if request.method == 'POST':
+           todo.delete()
+           return redirect('currenttodos')
+
+       return render(request, 'todo/viewtodo.html', dict_render)
+   ```
+
+3. Inserisco i form che richiamano i nuovi path in cui verranno eseguite le funzioni definite nel template in cui mi servono (e.g.: `viewtodo.html`):
+
+   ```html
+   <form method="POST" action="{% url 'completetodo' todo.id %}">
+       {% csrf_token %}
+       <button type="submit">Complete</button>
+   </form>
+
+   <form method="POST" action="{% url 'deletetodo' todo.id %}">
+       {% csrf_token %}
+       <button type="submit">Delete</button>
+   </form>
+   ```
