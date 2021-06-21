@@ -26,7 +26,7 @@
 24. [Elencare tutti gli oggetti creati da un utente](#elencare-tutti-gli-oggetti-creati-da-un-utente)
 25. [Come accedere agli oggetti di un utenti](#come-accedere-agli-oggetti-di-un-utenti)
 26. [Come modificare gli oggetti degli utenti](#come-modificare-gli-oggetti-degli-utenti)
-27. [Come completare e cancellare un'azione](#come-completare-e-cancellare-un---azione)
+27. [Come completare e cancellare un'azione](#come-completare-e-cancellare-unazione)
 
 ## Django installation
 
