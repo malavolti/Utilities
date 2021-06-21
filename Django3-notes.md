@@ -27,6 +27,7 @@
 25. [Come accedere agli oggetti di un utenti](#come-accedere-agli-oggetti-di-un-utenti)
 26. [Come modificare gli oggetti degli utenti](#come-modificare-gli-oggetti-degli-utenti)
 27. [Come completare e cancellare un'azione](#come-completare-e-cancellare-unazione)
+28. [Come elencare task completati](#come-elencare-task-completati)
 
 ## Django installation
 
@@ -1233,4 +1234,47 @@ Per consentire la modifica dei dati salvati per gli utenti, ho bisogno di usare 
        {% csrf_token %}
        <button type="submit">Delete</button>
    </form>
+   ```
+
+## Come elencare task completati
+
+1. Si parte sempre con l'aggiunta del path a `urls.py`:
+
+   ```python
+   # CompletedTodo
+   path('completed/', views.completedtodos, name='completedtodos')
+   ```
+
+2. Si definisce la funzione `completedtodos` in `views.py`:
+
+   ```python
+   def completedtodos(request):
+       # 'datecompleted__isnull=False' serve per visualizzare l'oggetto se è valorizzato.
+       todos = Todo.objects.filter(user=request.user, datecompleted__isnull=False)
+       dictRender = {'todos': todos}
+       return render(request, 'todo/completetodos.html', dictRender)
+   ```
+
+3. Si crea il template che mostra il contenuto ottenuto da `completedtodos`:
+
+   ```html
+   {% extends 'todo/base.html' %}
+
+   {% block content %}
+
+   <h1>COMPLETED TODOS</h1>
+
+   <ul>
+       {% for todo in todos %}
+       <li>
+           <a href="{% url 'viewtodo' todo.id %}">
+           {% if todo.important %}<strong>{% endif %}{{ todo.title }}{% if todos.important %}</strong>{% endif %}
+           {% if todo.memo %}- {{ todo.memo }}</p>{% endif %}
+           {{ todo.datecompleted|date:'M j Y H:i' }}
+           </a>
+       </li>
+       {% endfor %}
+   </ul>
+
+   {% endblock %}
    ```
