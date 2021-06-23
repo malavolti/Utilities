@@ -384,9 +384,16 @@ For uncommenting a block of text:
 
 ### How to find something with grep by excluding multiple things
 
-This grep will find the word "beta" in the current directory `.` without considering `path-dir-1,path-dir-2,path-dir-3` and hidden files, XML files or `error_log` file.
+This grep will find the word "beta" in the current directory `.` without considering `name-dir-1,name-dir-2,name-dir-3` and hidden files, XML files or `error_log` file.
+The `name-dir-*` is not the path, but the name of the directory:
+* path = `/opt/project/exampleDir`
+* name-dir = `exampleDir`
 
-`grep -r --exclude-dir={path-dir-1,path-dir-2,path-dir-3} --exclude={.*,*.xml,error_log} "beta" .`
+`grep -r --exclude-dir={name-dir-1,name-dir-2,name-dir-3} --exclude={.*,*.xml,error_log} "beta" .`
+
+If you need to exclude only one thing:
+
+`grep -r --exclude-dir={name-dir-1,} --exclude={.*,} "beta" .`
 
 ### How to copy text files without losing data
 
