@@ -27,7 +27,7 @@ Here you will find my notes on GIT
 22. [Branching - Useful to solve problems without touch the master branch until the resolution](#branching---useful-to-solve-problems-without-touch-the-master-branch-until-the-resolution)
 23. [Working with pull requests](#working-with-pull-requests)
 24. [How to clean bad data out of your Git repository history](#how-to-clean-bad-data-out-of-your-git-repository-history)
-25. [Howt to block/unblock changes for one or more files (locally)](#how-to-block-unblock-changes-for-one-or-more-files-locally)
+25. [How to block/unblock changes for one or more files (locally)](#how-to-blockunblock-changes-for-one-or-more-files-locally)
 
 # Fundamental
 
@@ -637,7 +637,7 @@ Once you've committed your changes- and your latest commit is clean with none of
 
 Documentation on BFG 1.13.0: https://repository.sonatype.org/service/local/repositories/central-proxy/content/com/madgag/bfg/1.13.0/bfg-1.13.0.txt
 
-## Howt to block/unblock changes for one or more files (locally)
+## How to block/unblock changes for one or more files (locally)
 
 1. Block:
    * `git update-index --assume-unchanged <FILE>`
