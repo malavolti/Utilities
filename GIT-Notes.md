@@ -27,6 +27,7 @@ Here you will find my notes on GIT
 22. [Branching - Useful to solve problems without touch the master branch until the resolution](#branching---useful-to-solve-problems-without-touch-the-master-branch-until-the-resolution)
 23. [Working with pull requests](#working-with-pull-requests)
 24. [How to clean bad data out of your Git repository history](#how-to-clean-bad-data-out-of-your-git-repository-history)
+25. [Howt to block/unblock changes to a ]
 
 # Fundamental
 
