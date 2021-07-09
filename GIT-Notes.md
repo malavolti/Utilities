@@ -53,36 +53,36 @@ https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 ## Clone an existing GIT repository or create a new one
 
 1. Clone an existing repository to your "my_grit" working directory:
-   * ```git clone git://github.com/schacon/grit.git my_grit```
+   * `git clone git://github.com/schacon/grit.git my_grit`
 
 OR
 
 1. Create a new GIT Repository inside your "my_project" directory:
-   * ```mkdir my_project```
-   * ```cd my_project```
-   * ```git init```
+   * `mkdir my_project`
+   * `cd my_project`
+   * `git init`
    
 2. Customize your GIT project environment (locally to your "my_project" directory):
-   * ```cd my_project```
-   * ```git config user.name "John Doe"```
-   * ```git config user.email johndoe@example.com```
-   * ```git config core.editor vim```     (you can set also "emacs" as your prefer editor)
-   * ```git config merge.tool vimdiff```  (you can set also "kdeff3", "tkdiff", "meld", "xxdiff", "emerge", "vimdiff", "gvimdiff", "ecmerge" or "opendiff")
+   * `cd my_project`
+   * `git config user.name "John Doe"`
+   * `git config user.email johndoe@example.com`
+   * `git config core.editor vim`     (you can set also "emacs" as your prefer editor)
+   * `git config merge.tool vimdiff`  (you can set also "kdeff3", "tkdiff", "meld", "xxdiff", "emerge", "vimdiff", "gvimdiff", "ecmerge" or "opendiff")
    
 3. Check your GIT settings:
-   * ```git config --list```
+   * `git config --list`
    
 ## How to get help on GIT
 
-   * ```git help <command-name>```  (example: "```git help config```")
+   * `git help <command-name>`  (example: "`git help config`")
    
 ## How to know that all is stored on GIT
 
-   * ```git status```
+   * `git status`
    
    result:
      
-   ``` 
+   ```bash 
    On branch master
    nothing to commit, working directory clean
    ```
@@ -91,8 +91,9 @@ OR
 
    * Example of GIT Status after have done a change:
    
-   ```git status```
-   ```
+   `git status`
+
+   ```bash
    On branch master
    Untracked files:
       (use "git add <file>..." to include in what will be committed)
@@ -107,30 +108,31 @@ OR
 ## How to add files to a GIT Repository
 
 1. Example on how to add a file to "my_project" repository:
-   * ```cd my_project```
-   * ```touch README```
-   * ```git add README .gitignore```     (<== ```git add <FILE_PATH_1 or DIR_PATH_1> <FILE_PATH_1 or DIR_PATH_1> ...```)
-   * ```git status```
-   ```
+   * `cd my_project`
+   * `touch README`
+   * `git add README .gitignore`     (<== `git add <FILE_PATH_1 or DIR_PATH_1> <FILE_PATH_1 or DIR_PATH_1> ...`)
+   * `git status`
+     ```bash
       On branch master
-      Changes to be committed:                     (<== this line indicate that we are in the "stage" area)
+      Changes to be committed:      (<== this line indicate that we are in the "stage" area)
         (use "git reset HEAD <file>..." to unstage)
 
               new file:   README
               new file:   .gitignore
-   ```
-   * ```git commit -m 'initial project version: Added README file'```
+     ```
+   * `git commit -m 'initial project version: Added README file'`
    
    NOTE: if you add an entire directory, you add all files inside that directory.
 
 ## How to modify files already tracked
 
 1. Change an already tracked file (benchmarks.rb)
-   * ```vim benchmarks.rb```
+   * `vim benchmarks.rb`
    
 2. Show the new status:
-   * ```git status```
-     ```
+   * `git status`
+
+     ```bash
      On branch master
      Changes to be committed:
        (use "git reset HEAD <file>..." to unstage)
@@ -145,11 +147,12 @@ OR
      ```
      
 3. Add the modified file to the staging area:
-   * ```git add benchmarks.rb```
+   * `git add benchmarks.rb`
 
 4. View the new status:
-   * ```git status```
-     ```
+   * `git status`
+
+     ```bash
      On branch master
      Changes to be committed:
        (use "git reset HEAD <file>..." to unstage)
@@ -159,9 +162,10 @@ OR
      ```
               
 5. If you modify a file that it is already present on the stage area, you have to add it again to the stage area:
-   * ```vim benchmarks.rb```
-   * ```git status```
-     ```
+   * `vim benchmarks.rb`
+   * `git status`
+
+     ```bash
      On branch master
      Changes to be committed:
        (use "git reset HEAD <file>..." to unstage)
@@ -175,9 +179,11 @@ OR
 
              modified:   benchmarks.rb
      ```
-   * ```git add benchmarks.rb```
-   * ```git status```
-     ```
+     
+   * `git add benchmarks.rb`
+   * `git status`
+
+     ```bash
       On branch master
       Changes to be committed:
         (use "git reset HEAD <file>..." to unstage)
@@ -188,7 +194,7 @@ OR
 
 ## How to ignore one or more files from versioning
 
-   * If you want to ignore some files/directories to git versioning, you have to edit your "```.gitignore```" file by following these rules:
+   * If you want to ignore some files/directories to git versioning, you have to edit your `.gitignore` file by following these rules:
 
      * Blank lines or lines starting with **#** are ignored.
 
@@ -200,8 +206,9 @@ OR
 
      * You can negate a pattern by starting it with an exclamation point (**!**).
 
-   Example of a "```.gitignore```" file:
-   ```
+   Example of a "`.gitignore`" file:
+
+   ```bash
    # Comment for .gitignore file
    # no .a files
    *.a
@@ -226,10 +233,11 @@ OR
    
 ## Viewing your staged and unstaged changes
 
-   * To see what you’ve changed but not yet staged, type ```git diff``` with no other arguments:
+   * To see what you’ve changed but not yet staged, type `git diff` with no other arguments:
 
-   ```git diff```
-   ```
+   `git diff`
+
+   ```bash
    diff --git a/benchmarks.rb b/benchmarks.rb
    index 3cb747f..da65585 100644
    --- a/benchmarks.rb
@@ -247,11 +255,12 @@ OR
               log.size
    ```
 
-   * If you want to see what you’ve staged that will go into your next commit, you can use ```git diff --staged```. 
+   * If you want to see what you’ve staged that will go into your next commit, you can use `git diff --staged`. 
    This command compares your staged changes to your last commit:
 
-   ```git diff --cached```
-   ```
+   `git diff --staged`
+
+   ```bash
    diff --git a/README b/README
    new file mode 100644
    index 0000000..03902a1
@@ -268,283 +277,291 @@ OR
 ## Commit your changes (git commit)
 
    * To add changes to your commit area you have to run the command:
-     ```git commit```
+     `git commit`
 
      and add an useful message to describe your commit at the first line.
       
      or
       
-     ```git commit -m "useful summary message"```
+     `git commit -m "useful summary message"`
       
 ## Removing files (git rm)
 
    * To remove completely a file/directory from GIT versioning and from your working directory you have to use:
-      * ```git rm <FILE_PATH_1 or DIR_PATH_1> <FILE_PATH_2 or DIR_PATH_2> ...```
+      * `git rm <FILE_PATH_1 or DIR_PATH_1> <FILE_PATH_2 or DIR_PATH_2> ...`
       
    * To keep the file in your working area but remove it from your staging area:
-      * ```git rm --cached <FILE_PATH_1 or DIR_PATH_1> <FILE_PATH_2 or DIR_PATH_2> ...```
+      * `git rm --cached <FILE_PATH_1 or DIR_PATH_1> <FILE_PATH_2 or DIR_PATH_2> ...`
       
- You can pass files, directories, and file-glob patterns to the ```git rm``` command:
-    * ```git rm log/\*.log```   (<== This command removes all files that have the .log extension in the log/ directory.)
-    * ```git rm \*~```          (<== This command removes all files whose names end with a ~)
+ You can pass files, directories, and file-glob patterns to the `git rm` command:
+   * `git rm log/\*.log`   (<== This command removes all files that have the .log extension in the log/ directory.)
+   * `git rm \*~`          (<== This command removes all files whose names end with a ~)
 
 ## Renaming files (git mv)
 
-   * ```git mv <original_name> <target_name>```
+   * `git mv <original_name> <target_name>`
 
-   Example: ```git mv README README.md```
+   Example: `git mv README README.md`
       
 ## Viewing the commit history (git log)
 
 1. Full History:
-   * ```git log```
+   * `git log`
 
 2. Last 2 commits with their changes:
-   * ```git log -p -2```
+   * `git log -p -2`
 
 3. First line of Full History:
-   * ```git log --pretty=oneline```
+   * `git log --pretty=oneline`
 
 4. Full History with date of commit creation:
-   * ```git log --pretty=fuller```
+   * `git log --pretty=fuller`
    
 ## Undoing things
 
 1. One of the common undos takes place when you commit too early and possibly forget to add some files, or you mess up your commit message.
 
-   * ```git commit --amend```    (<== run this command immediately after your previous commit. This command overwrite your last commit. Useful to add something on the last commit)
+   * `git commit --amend`    (<== run this command immediately after your previous commit. This command overwrite your last commit. Useful to add something on the last commit)
    
     Example:
-      * ```git commit -m 'initial commit'```
-      * ```git add .gitignore```
-      * ```git commit --amend```       (and add an useful message that will replace the last commit message)
+      * `git commit -m 'initial commit'`
+      * `git add .gitignore`
+      * `git commit --amend`       (and add an useful message that will replace the last commit message)
 
 2. Unstaging a Staged File (you are into the staging area before doing the commit):
-   * ```git reset HEAD <file>...```
+   * `git reset HEAD <file>...`
       
     Example:
-      * ```git status```
-      ```
-      On branch master
-      Changes to be committed:
-       (use "git reset HEAD <file>..." to unstage)
+      * `git status`
 
-          new file:   README
-          modified:   benchmarks.rb
-      ```
-              
-      * ```git reset HEAD benchmarks.rb```
-      ```
-      Unstaged changes after reset:
-      M       benchmarks.rb
-      ```
+        ```bash
+        On branch master
+        Changes to be committed:
+         (use "git reset HEAD <file>..." to unstage)
 
-   NOTE: Calling ```git reset``` without an option is not dangerous - it only touches your staging area.
+            new file:   README
+            modified:   benchmarks.rb
+        ```
+
+      * `git reset HEAD benchmarks.rb`
+
+        ```bash
+        Unstaged changes after reset:
+        M       benchmarks.rb
+        ```
+
+   NOTE: Calling `git reset` without an option is not dangerous - it only touches your staging area.
    
 3. Discard changes to a modified file (DANGEROUS):
-   * ```git checkout -- README.md```   (Discard all changes you have done on the README.md file after the last commit. Any changes you made to that file will be lost)
+   * `git checkout -- README.md`   (Discard all changes you have done on the README.md file after the last commit. Any changes you made to that file will be lost)
    
 4. Discard changes of the last commit already pushed by reverting code to a previous commit pushed on the repository:
-   * ```git log --pretty=oneline```
-   ```
-   b5e7effda6e90b1761966fcf305113e78130e37a Add how.txt
-   b96b657573d7126c13c4f212f79d9c71d203e20e First Commit
-   ```
+   * `git log --pretty=oneline`
+
+     ```bash
+     b5e7effda6e90b1761966fcf305113e78130e37a Add how.txt
+     b96b657573d7126c13c4f212f79d9c71d203e20e First Commit
+     ```
       
-   * ```git revert b96b657573d7126c13c4f212f79d9c71d203e20e```
-   * ```git push origin master```
+   * `git revert b96b657573d7126c13c4f212f79d9c71d203e20e`
+   * `git push origin master`
 
 5. Undo the last commit (before push and without lose changes):
-   * ```git reset --soft HEAD~1```
+   * `git reset --soft HEAD~1`
 
 ## Showing your remote server (git remote)
 
-   * ```git remote -v```
+   * `git remote -v`
    
-   ```
-   bakkdoor  https://github.com/bakkdoor/grit (fetch)
-   bakkdoor  https://github.com/bakkdoor/grit (push)
-   cho45     https://github.com/cho45/grit (fetch)
-   cho45     https://github.com/cho45/grit (push)
-   defunkt   https://github.com/defunkt/grit (fetch)
-   defunkt   https://github.com/defunkt/grit (push)
-   origin    git@github.com:mojombo/grit.git (fetch)
-   origin    git@github.com:mojombo/grit.git (push)
-   ```
+      ```bash
+      bakkdoor  https://github.com/bakkdoor/grit (fetch)
+      bakkdoor  https://github.com/bakkdoor/grit (push)
+      cho45     https://github.com/cho45/grit (fetch)
+      cho45     https://github.com/cho45/grit (push)
+      defunkt   https://github.com/defunkt/grit (fetch)
+      defunkt   https://github.com/defunkt/grit (push)
+      origin    git@github.com:mojombo/grit.git (fetch)
+      origin    git@github.com:mojombo/grit.git (push)
+      `bash
    
    This means we can pull contributions from any of these users pretty easily.
 
 ## Adding remote repositories
 
-   * ```git remote add pb git://github.com/paulboone/ticgit.git```
-   * ```git remote -v```
+   * `git remote add pb git://github.com/paulboone/ticgit.git`
+   * `git remote -v`
 
-   ```
-   origin  git://github.com/schacon/ticgit.git
-   pb  git://github.com/paulboone/ticgit.git
-   ```
+      ```bash
+      origin  git://github.com/schacon/ticgit.git
+      pb  git://github.com/paulboone/ticgit.git
+      ```
       
    if you want to fetch all the information that Paul has but that you don’t yet have in your repository, you can run git fetch pb:
-      * ```git fetch pb```
+      * `git fetch pb`
       
       Paul’s master branch is now accessible locally as pb/master – you can merge it into one of your branches, 
       or you can check out a local branch at that point if you want to inspect it.
-      It’s important to note that the ```git fetch``` command only downloads the data to your local repository – 
+      It’s important to note that the `git fetch` command only downloads the data to your local repository – 
       it doesn’t automatically merge it with any of your work or modify what you’re currently working on. 
       You have to merge it manually into your work when you’re ready.
 
-   * ```git pull origin master```
-      Running ```git pull``` generally fetches data from the server you originally cloned from and automatically tries to merge it into the code you’re currently working on.
+   * `git pull origin master`
+      Running `git pull` generally fetches data from the server you originally cloned from and automatically tries to merge it into the code you’re currently working on.
      
 ## Pushing to your remotes (git push)
 
    When you have your project at a point that you want to share, you have to push it upstream.
 
-   * ```git push [remote-name] [branch-name]```
+   * `git push [remote-name] [branch-name]`
    
-   Example:
-      * If you want to push your master branch to your origin server then you can run this to push any commits you’ve done back up to the server:
-         * ```git push origin master```
+   **Example:**
+   If you want to push your master branch to your origin server then you can run this to push any commits you’ve done back up to the server:
+   * `git push origin master`
          (This command works only if you cloned from a server to which you have write access and if nobody has pushed in the meantime.)
          
 ## Inspecting a remote
 
-   * ```git remote show [remote-name]```
+   * `git remote show [remote-name]`
    
    Example:
-    * ```git remote show origin```
+   * `git remote show origin`
 
-    ```
-    * remote origin
-      Fetch URL: https://github.com/schacon/ticgit
-      Push  URL: https://github.com/schacon/ticgit
-      HEAD branch: master
-      Remote branches:
-        master                               tracked
-        dev-branch                           tracked
-      Local branch configured for 'git pull':
-        master merges with remote master
-      Local ref configured for 'git push':
-        master pushes to master (up to date)
-    ```
+       ```bash
+       * remote origin
+         Fetch URL: https://github.com/schacon/ticgit
+         Push  URL: https://github.com/schacon/ticgit
+         HEAD branch: master
+         Remote branches:
+           master                               tracked
+           dev-branch                           tracked
+         Local branch configured for 'git pull':
+           master merges with remote master
+         Local ref configured for 'git push':
+           master pushes to master (up to date)
+       ```
    
-    The command helpfully tells you that if you’re on the master branch and you run git pull, 
-    it will automatically merge in the master branch on the remote after it fetches all the remote references.
+      The command helpfully tells you that if you’re on the master branch and you run git pull, 
+      it will automatically merge in the master branch on the remote after it fetches all the remote references.
    
 ## Removing or Renaming remotes
 
 1. RENAMING:
-   * ```git remote rename pb paul```
-   * ```git remote```
+   * `git remote rename pb paul`
+   * `git remote`
    
-   ```
-   origin
-   paul
-   ```
+      ```bash
+      origin
+      paul
+      ```
 
 2. REMOVING:
-   * ```git remote rm paul```
-   * ```git remote```
-   ```
-     origin
-   ```
+   * `git remote rm paul`
+   * `git remote`
+      ```bash
+        origin
+      ```
   
 ## Tagging
 
 1. Listing existing TAGs:
-   * ```git tag```          (<== This command lists the tags in alphabetical order)
+   * `git tag`          (<== This command lists the tags in alphabetical order)
 
 2. Search all tags with a particular pattern:
-   * ```git tag -l "v1.8.5*"```
+   * `git tag -l "v1.8.5*"`
    
 3. Create annotated TAG:
-   * ```git tag -a v1.4 -m "my version 1.4"```            (<== You can also not use the -m "message" and add message directly on the editor)
-   * ```git tag```
-   ```
-   v1.4
-   ```
-   * ```git show v1.4```
-   ```
-   tag v1.4
-   Tagger: Ben Straub <ben@straub.cc>
-   Date:   Sat May 3 20:19:12 2014 -0700
+   * `git tag -a v1.4 -m "my version 1.4"`            (<== You can also not use the -m "message" and add message directly on the editor)
+   * `git tag`
 
-    my version 1.4
+      ```bash
+      v1.4
+      ```
+   * `git show v1.4`
 
-   commit ca82a6dff817ec66f44342007202690a93763949
-   Author: Scott Chacon <schacon@gee-mail.com>
-   Date:   Mon Mar 17 21:52:11 2008 -0700
+      ```bash
+      tag v1.4
+      Tagger: Ben Straub <ben@straub.cc>
+      Date:   Sat May 3 20:19:12 2014 -0700
 
-       changed the version number
-   ```
+       my version 1.4
+
+      commit ca82a6dff817ec66f44342007202690a93763949
+      Author: Scott Chacon <schacon@gee-mail.com>
+      Date:   Mon Mar 17 21:52:11 2008 -0700
+
+          changed the version number
+      ```
 
 4. Create annotated TAG from a specific commit in the past:
 
-   * ```git log --pretty=oneline```
-   ```
-   15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment'
-   a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
-   0d52aaab4479697da7686c15f77a3d64d9165190 one more thing
-   6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch 'experiment'
-   0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit function
-   4682c3261057305bdd616e23b64b0857d832627b added a todo file
-   166ae0c4d3f420721acbb115cc33848dfcc2121a started write support
-   9fceb02d0ae598e95dc970b74767f19372d61af8 updated rakefile
-   964f16d36dfccde844893cac5b347e7b3d44abbc commit the todo
-   8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme
-   ```
+   * `git log --pretty=oneline`
+
+      ```bash
+      15027957951b64cf874c3557a0f3547bd83b3ff6 Merge branch 'experiment'
+      a6b4c97498bd301d84096da251c98a07c7723e65 beginning write support
+      0d52aaab4479697da7686c15f77a3d64d9165190 one more thing
+      6d52a271eda8725415634dd79daabbc4d9b6008e Merge branch 'experiment'
+      0b7434d86859cc7b8c3d5e1dddfed66ff742fcbc added a commit function
+      4682c3261057305bdd616e23b64b0857d832627b added a todo file
+      166ae0c4d3f420721acbb115cc33848dfcc2121a started write support
+      9fceb02d0ae598e95dc970b74767f19372d61af8 updated rakefile
+      964f16d36dfccde844893cac5b347e7b3d44abbc commit the todo
+      8a5cbc430f1a9c3d00faaeffd07798508422908a updated readme
+      ```
    
-   * ```git tag -a v1.2 9fceb02```
+   * `git tag -a v1.2 9fceb02`
 
 5) Sharing Tags:
    By default, the git push command doesn’t transfer tags to remote servers. You have to do it manually with:
-   * ```git push origin v1.4```
+   * `git push origin v1.4`
    
 ## Branching - Useful to solve problems without touch the master branch until the resolution
 
 1. To create a branch and switch to it at the same time:
-   * ```git checkout -b iss53```
-   ```
-   Switched to a new branch "iss53"
-   ```
+   * `git checkout -b iss53`
+   
+      ```bash
+      Switched to a new branch "iss53"
+      ```
 
 2. Write code to solve the issue and commit to the new branch where you are located now
-   * ```vim README.md```
-   * ```git add README.md```
-   * ```git commit```            (<== And add an useful summary message)
+   * `vim README.md`
+   * `git add README.md`
+   * `git commit`            (<== And add an useful summary message)
    
    a. Pause. A new more critical, issue comes up. Open a new branch from the master branch:
-      * ```git checkout master```
-      * ```git checkout -b hotfix```
-      * ```vim README.md```
-      * ```git add README.md```
-      * ```git commit```          (<== And add an useful summary message)
+      * `git checkout master`
+      * `git checkout -b hotfix`
+      * `vim README.md`
+      * `git add README.md`
+      * `git commit`          (<== And add an useful summary message)
    
    b. Merge the hotfix with the master branch code to solve the critical problem:
-      * ```git checkout master```       (<== Come back to the master branch)
-      * ```git merge hotfix```          (<== Merge the hotfix code)
-      * ```git branch -d hotfix```      (<== Delete the useless hotfix branch)
+      * `git checkout master`       (<== Come back to the master branch)
+      * `git merge hotfix`          (<== Merge the hotfix code)
+      * `git branch -d hotfix`      (<== Delete the useless hotfix branch)
    
 3. Now you can return to write code for resolution of the issue 53:
-   * ```git checkout iss53```
-   * ```vim README.md```
-   * ```git add README.md```
-   * ```git commit```
+   * `git checkout iss53`
+   * `vim README.md`
+   * `git add README.md`
+   * `git commit`
    
 4. Mow you want to merge the iss53 code on the master branch:
-   * ```git checkout master```       (<== Come back to the master branch)
-   * ```git merge iss53```           (<== Merge the iss53 code)
+   * `git checkout master`       (<== Come back to the master branch)
+   * `git merge iss53`           (<== Merge the iss53 code)
    
-   ```
-   Auto-merging README.md
-   CONFLICT (content): Merge conflict in README.md
-   Automatic merge failed; fix conflicts and then commit the result.
-   ```
+      ```bash
+      Auto-merging README.md
+      CONFLICT (content): Merge conflict in README.md
+      Automatic merge failed; fix conflicts and then commit the result.
+      ```
    
-   * ```git status```   (<== To see which files are unmerged. Anything that has merge conflicts and hasn’t been resolved is listed as unmerged.)
+   * `git status`   (<== To see which files are unmerged. Anything that has merge conflicts and hasn’t been resolved is listed as unmerged.)
    
    Your file contains a section that looks something like this:
-   ```
+
+   ```bash
    DOCUMENTATION
 
    <<<<<<< HEAD   (<== HEAD point to the "master" branch where we are now, after che "git checkout master" command)
@@ -556,15 +573,16 @@ OR
       
    To solve the conflicts, you have to open the "README.md" file and edit it manually by removing all "<<<<<<<", "=======" and ">>>>>>>" lines after decided what keep and what discard.
    
-   * ```git status```             (<== useful to know if the conflict are solved)
+   * `git status`             (<== useful to know if the conflict are solved)
    
-   * ```git add README.md```      (<== put the changes into the staging area)
-   * ```git commit```             (<== And add an useful summary message)
-   * ```git branch -d iss53```    (<== Delete the useless iss53 branch)
+   * `git add README.md`      (<== put the changes into the staging area)
+   * `git commit`             (<== And add an useful summary message)
+   * `git branch -d iss53`    (<== Delete the useless iss53 branch)
 
 5) See how many branches do you have:
-   * ```git branch -v```
-     ```
+   * `git branch -v`
+
+     ```bash
        iss53 93b412c fixed code for issue #53
      * master 7a98805 Merge branch 'iss53'                (<== This is the branch that you are in)
      ```
@@ -572,24 +590,24 @@ OR
 ## Working with pull requests
 
 Glossary:
-   * ```###GIT-REPOSITORY-HTTP-URL###```: Original repository
-   * ```###WORKING-DIRECTORY-CREATED###```: Directory created by cloning a repository
-   * ```###GIT-REPOSITORY-FORKED-HTTP-URL###```: forked repository from the original repository
-   * ```###MASTER-OR-SPECIFIC-BRANCH###```: "master" or any other branch we want to test before merge it with the original repository
+   * `###GIT-REPOSITORY-HTTP-URL###`: Original repository
+   * `###WORKING-DIRECTORY-CREATED###`: Directory created by cloning a repository
+   * `###GIT-REPOSITORY-FORKED-HTTP-URL###`: forked repository from the original repository
+   * `###MASTER-OR-SPECIFIC-BRANCH###`: "master" or any other branch we want to test before merge it with the original repository
    
 1. How to try a Pull Request before merge it on the repository
    (https://www.electricmonk.nl/log/2014/03/31/test-a-pull-merge-request-before-accepting-on-bitbucket/)
-   * ```git clone ###GIT-REPOSITORY-HTTP-URL###```
-   * ```cd ###WORKING-DIRECTORY-CREATED###```
-   * ```git fetch ###GIT-REPOSITORY-FORKED-HTTP-URL### ###MASTER-OR-SPECIFIC-BRANCH###```
-   * ```git checkout FETCH_HEAD```   (Remember that this refspec is temporary! If you do a new fetch (that includes git pull and various other commands), the FETCH_HEAD could have changed.)
-   * ```git log --pretty=oneline```  (You can see all commits added by FETCH_HEAD refspec)
+   * `git clone ###GIT-REPOSITORY-HTTP-URL###`
+   * `cd ###WORKING-DIRECTORY-CREATED###`
+   * `git fetch ###GIT-REPOSITORY-FORKED-HTTP-URL### ###MASTER-OR-SPECIFIC-BRANCH###`
+   * `git checkout FETCH_HEAD`   (Remember that this refspec is temporary! If you do a new fetch (that includes git pull and various other commands), the FETCH_HEAD could have changed.)
+   * `git log --pretty=oneline`  (You can see all commits added by FETCH_HEAD refspec)
    * If you want to reject the changes of the Pull Request you have to check out the original branch with:
-      ```git checkout master```
+      `git checkout master`
    * If you're satisfied that the changes made work properly and want to keep the changes from the pull request, you can merge them into master branch with:
-      1. ```git checkout master```
-      2. ```git merge FETCH_HEAD```
-      3. ```git push origin master```   (This will automatically accept the pull request)
+      1. `git checkout master`
+      2. `git merge FETCH_HEAD`
+      3. `git push origin master`   (This will automatically accept the pull request)
       
 ## How To clean bad data out of your Git repository history
 
