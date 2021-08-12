@@ -512,9 +512,15 @@ OR
    
    * `git tag -a v1.2 9fceb02`
 
-5) Sharing Tags:
+5. Sharing Tags:
    By default, the git push command doesn’t transfer tags to remote servers. You have to do it manually with:
    * `git push origin v1.4`
+
+6. Delete local tag:
+   * `git tag -d <tagname>`
+
+7. Delete remote tag:
+   * `git push origin --delete <tagname>`
    
 ## Branching - Useful to solve problems without touch the master branch until the resolution
 
