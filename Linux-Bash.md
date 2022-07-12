@@ -34,6 +34,7 @@
 30. [How to format an XML file](#how-to-format-an-xml-file)
 31. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
 32. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
+33. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -434,3 +435,10 @@ IF `sudo locale -a` returns only `C`, `C.UTF-8` and `POSIZ` run the following co
 * `sudo vim /etc/locale.gen` (and uncomment the locales preferred)
 * `sudo locale-gen` (to generate locales selected)
 * `sudo locale -a` (to check the locales generation)
+
+### How to add new GPG key for APT on Debian 11+
+
+* Download the PUB key, convert into a GPG key and save it on `/usr/share/keyrings` directory
+  * `sudo wget -O- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | sudo tee /usr/share/keyrings/google-chrome.gpg`
+* Importa il repository che usa la nuova GPG in `/etc/apt/sources.list.d`
+  * `echo deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main | sudo tee /etc/apt/sources.list.d/google-chrome.list`
