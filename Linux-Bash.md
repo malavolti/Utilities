@@ -44,6 +44,7 @@ This example shows how to add the user "username" and enable him to SSH access.
 ```bash
 sudo adduser --home /home/username --group --shell /bin/bash username
 sudo mkdir /home/username/.ssh
+sudo touch /home/username/.ssh/authorized_keys
 sudo chown -R username:username /home/username/
 sudo chmod 0700 /home/username/.ssh
 sudo chmod 0600 /home/username/.ssh/authorized_keys
@@ -58,6 +59,7 @@ This example shows how to add the user "username" and enable him to SSH access.
 ```bash
 sudo adduser --system --group --shell /bin/bash username
 sudo mkdir /home/username/.ssh
+sudo touch /home/username/.ssh/authorized_keys
 sudo chown -R username:username /home/username/
 sudo chmod 0700 /home/username/.ssh
 sudo chmod 0600 /home/username/.ssh/authorized_keys
