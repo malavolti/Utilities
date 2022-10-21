@@ -56,7 +56,7 @@ sudo systemctl reload ssh.service
 This example shows how to add the user "username" and enable him to SSH access.
 
 ```bash
-sudo adduser --system --group --shell /bin/bash rsync-backup
+sudo adduser --system --group --shell /bin/bash username
 sudo mkdir /home/username/.ssh
 sudo chown -R username:username /home/username/
 sudo chmod 0700 /home/username/.ssh
