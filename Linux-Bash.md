@@ -3,45 +3,61 @@
 ## Table of Contents
 
 1. [How to add a new user and provide SSH access to him](#how-to-add-a-new-user-and-provide-ssh-access-to-him)
-2. [How to add/remove an user to 'sudo'(ROOT) user group](#how-to-addremove-an-user-to-sudoroot-user-group)
-3. [How to remove an user from the system completely](#how-to-remove-an-user-from-the-system-completely)
-4. [How to find out useful info of your machine](#how-to-find-out-useful-info-of-your-machine)
-5. [How to add nice features to Vim](#how-to-add-nice-features-to-vim)
-6. [How to enable SHELL colors](#how-to-enable-shell-colors)
-7. [How to change the Hostname name](#how-to-change-the-hostname-name)
-8. [How to maintain SSH session open](#how-to-maintain-ssh-session-open)
-9. [How to download a file and save it on a specific path](#how-to-download-a-file-and-save-it-on-a-specific-path)
-10. [How to remove a file that starting with '-' or '--'](#how-to-find-specific-files-in-a-path-and-remove-them)
-11. [How to find one or more files](#how-to-find-one-or-more-files)
-12. [How to upload a file or a directory on a SSH Server](#how-to-upload-a-file-or-a-directory-on-a-ssh-server)
-13. [How to find a service and kill it](#how-to-find-a-service-and-kill-it)
-14. [How to easily share a terminal on a machine with others](#how-to-easily-share-a-terminal-on-a-machine-with-others)
-15. [How to reconfigure keyboard](#how-to-reconfigure-keyboard)
-16. [How to TAR command (c = create, z = gzip, f= file, x = extract, v = verbose)](#how-to-tar-command-c--create-z--gzip-f-file-x--extract-v--verbose)
-17. [How to kill more processes](#how-to-kill-more-processes)
-18. [How to research a word on several files](#how-to-research-a-word-on-several-files)
-19. [How to resize images from terminal](#how-to-resize-images-from-terminal)
-20. [How to watch the behaviour of a directory](#how-to-watch-the-behaviour-of-a-directory)
-21. [How to send emails from the machine (Internet Site)](#how-to-send-emails-from-the-machine-internet-site)
-22. [How to format and mount a new hard disk](#how-to-format-and-mount-a-new-hard-disk)
-23. [How to remove a partition from an hard disk](#how-to-remove-a-partition-from-an-hard-disk)
-24. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
-25. [How to comment/uncomment an entire block of text on Vim](#how-to-commentuncomment-an-entire-block-of-code-on-vim)
-26. [How to remove files older than one year](#how-to-remove-files-older-than-one-year)
-27. [How to copy directory without losing timestamps](#how-to-copy-directory-without-losing-timestamps)
-28. [How to find something with grep by excluding multiple things](#how-to-find-something-with-grep-by-excluding-multiple-things)
-29. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
-30. [How to format an XML file](#how-to-format-an-xml-file)
-31. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
-32. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
-33. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
+2. [How to add a new system user and provide SSH access to him](#how-to-add-a-new-system-user-and-provide-ssh-access-to-him)
+3. [How to add/remove an user to 'sudo'(ROOT) user group](#how-to-addremove-an-user-to-sudoroot-user-group)
+4. [How to remove an user from the system completely](#how-to-remove-an-user-from-the-system-completely)
+5. [How to find out useful info of your machine](#how-to-find-out-useful-info-of-your-machine)
+6. [How to add nice features to Vim](#how-to-add-nice-features-to-vim)
+7. [How to enable SHELL colors](#how-to-enable-shell-colors)
+8. [How to change the Hostname name](#how-to-change-the-hostname-name)
+9. [How to maintain SSH session open](#how-to-maintain-ssh-session-open)
+10. [How to download a file and save it on a specific path](#how-to-download-a-file-and-save-it-on-a-specific-path)
+11. [How to remove a file that starting with '-' or '--'](#how-to-find-specific-files-in-a-path-and-remove-them)
+12. [How to find one or more files](#how-to-find-one-or-more-files)
+13. [How to upload a file or a directory on a SSH Server](#how-to-upload-a-file-or-a-directory-on-a-ssh-server)
+14. [How to find a service and kill it](#how-to-find-a-service-and-kill-it)
+15. [How to easily share a terminal on a machine with others](#how-to-easily-share-a-terminal-on-a-machine-with-others)
+16. [How to reconfigure keyboard](#how-to-reconfigure-keyboard)
+17. [How to TAR command (c = create, z = gzip, f= file, x = extract, v = verbose)](#how-to-tar-command-c--create-z--gzip-f-file-x--extract-v--verbose)
+18. [How to kill more processes](#how-to-kill-more-processes)
+19. [How to research a word on several files](#how-to-research-a-word-on-several-files)
+20. [How to resize images from terminal](#how-to-resize-images-from-terminal)
+21. [How to watch the behaviour of a directory](#how-to-watch-the-behaviour-of-a-directory)
+22. [How to send emails from the machine (Internet Site)](#how-to-send-emails-from-the-machine-internet-site)
+23. [How to format and mount a new hard disk](#how-to-format-and-mount-a-new-hard-disk)
+24. [How to remove a partition from an hard disk](#how-to-remove-a-partition-from-an-hard-disk)
+25. [How to create and use a swapfile](#how-to-create-and-use-a-swapfile)
+26. [How to comment/uncomment an entire block of text on Vim](#how-to-commentuncomment-an-entire-block-of-code-on-vim)
+27. [How to remove files older than one year](#how-to-remove-files-older-than-one-year)
+28. [How to copy directory without losing timestamps](#how-to-copy-directory-without-losing-timestamps)
+29. [How to find something with grep by excluding multiple things](#how-to-find-something-with-grep-by-excluding-multiple-things)
+30. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
+31. [How to format an XML file](#how-to-format-an-xml-file)
+32. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
+33. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
+34. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
 
 ### How to add a new user and provide SSH access to him 
 
 This example shows how to add the user "username" and enable him to SSH access.
 
 ```bash
-sudo adduser --home /home/username username
+sudo adduser --home /home/username --group --shell /bin/bash username
+sudo mkdir /home/username/.ssh
+sudo chown -R username:username /home/username/
+sudo chmod 0700 /home/username/.ssh
+sudo chmod 0600 /home/username/.ssh/authorized_keys
+sudo systemctl reload ssh.service
+```
+(paste the '```id_rsa.pub```' of the new user into his '```authorized_keys```' file)
+
+### How to add a new system user and provide SSH access to him 
+
+This example shows how to add the user "username" and enable him to SSH access.
+
+```bash
+sudo adduser --system --group --shell /bin/bash rsync-backup
+sudo mkdir /home/username/.ssh
 sudo chown -R username:username /home/username/
 sudo chmod 0700 /home/username/.ssh
 sudo chmod 0600 /home/username/.ssh/authorized_keys
