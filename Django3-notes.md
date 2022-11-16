@@ -158,7 +158,7 @@ La Apps esse sono i moduli in cui si può dividere il progetto.
  
     urlpatterns = [
        path('admin/', admin.site.urls),
-       path('', generator_views.homepage, name='homepage'),   #questo aggiunge la url per la homepage e la nomina 'homepage'
+       path('', generator_views.tmpl_example, name='homepage'),   #questo aggiunge la url per la homepage e la nomina 'homepage'
     ]
     ```
 
