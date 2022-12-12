@@ -630,8 +630,16 @@ Once you've committed your changes- and your latest commit is clean with none of
    
    (This is a bare repo, which means your normal files won't be visible, but it is a full copy of the Git database of your repository, and at this point you should make a backup of it to ensure you don't lose anything.)
 
-3. Remove all files named "**id_rsa**" or "**id_rsa**" from your repo: 
-   * `java -jar bfg.jar --delete-files id_{dsa,rsa}  my-repo.git`
+3. Clean bad data out of your Git repository history with one or more the following actions:
+
+   * Remove all files named "**id_rsa**" or "**id_rsa**" from your repo: 
+     * `java -jar bfg.jar --delete-files id_{dsa,rsa}  my-repo.git`
+   
+   * Remove all secret strings from your repo:
+     1. Create the `replacements-list.txt` file where you list, one expression per line, all replacements to apply in the format:
+        <br/>`word-to-replace==>word-replaced`
+        
+     2. Do the job with `java -jar bfg.jar --replace-text replacement-list.txt my-repo.git`
 
 4. Apply changes to your local repo:
    * `cd my-repo.git`
