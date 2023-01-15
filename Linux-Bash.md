@@ -36,6 +36,7 @@
 32. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
 33. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
 34. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
+35. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -460,3 +461,20 @@ IF `sudo locale -a` returns only `C`, `C.UTF-8` and `POSIZ` run the following co
   * `sudo wget -O- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor | sudo tee /usr/share/keyrings/google-chrome.gpg`
 * Importa il repository che usa la nuova GPG in `/etc/apt/sources.list.d`
   * `echo deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main | sudo tee /etc/apt/sources.list.d/google-chrome.list`
+
+### How to customize the prompt of bash
+
+* Enjoy with: https://scriptim.github.io/bash-prompt-generator/
+
+* Bash prompt preferred to put into `~/.bashrc` to permanently set:
+  * For the 'root' user:
+    
+    ```bash
+    PS1='\[\e[0;1;91m\]\u\[\e[0;1;91m\]@\[\e[0;1;91m\]\h\[\e[0m\][\[\e[0;38;5;226m\]\W\[\e[0m\]]\[\e[0m\]:\[\e[0m\]'
+    ```
+    
+  * For the other users:
+  
+    ```bash
+    PS1='\[\e[0;1;38;5;112m\]\u\[\e[0;1;38;5;112m\]@\[\e[0;1;38;5;76m\]\h\[\e[0m\][\[\e[0;38;5;226m\]\W\[\e[0m\]]\[\e[0m\]:\[\e[0m\]'
+    ```
