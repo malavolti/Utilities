@@ -58,17 +58,11 @@ HOWTO Create and Push a new Docker image
 #. Move into the directory where is the Dockerfile used to create the Docker image
 #. Build the Docker image:
 
-   * ``docker build -t <repo-name>:<tag> -f Dockerfile .``
+   * ``docker build -t cloud.canister.io:5000/<username>/<repo-name>:<tag> -f Dockerfile .``
 
    replace ``<repo-name>`` and ``<tag>`` with the correct value. Suggestion for tags: https://semver.org/
    
    If ``:<tag>`` it is not indicated, will be used ``latest`` value.
-
-#. Tagging the Docker image created:
-
-   * ``docker image tag <repo-name>:<tag> cloud.canister.io:5000/<username>/<repo-name>:<tag>``
-   
-   replace ``<username>``, ``<repo-name>`` and ``<tag>`` with the correct value.
 
 #. Push the Docker image to Canister.io:
 
