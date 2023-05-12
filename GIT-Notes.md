@@ -585,6 +585,7 @@ OR
    * `git add README.md`      (<== put the changes into the staging area)
    * `git commit`             (<== And add an useful summary message)
    * `git branch -d iss53`    (<== Delete the useless iss53 branch)
+   * `git push origin -d branch_name_to_delete`    (<== Delete the branch from remote repo, if you have pushed it) 
 
 5) See how many branches do you have:
    * `git branch -v`
@@ -593,7 +594,7 @@ OR
        iss53 93b412c fixed code for issue #53
      * master 7a98805 Merge branch 'iss53'                (<== This is the branch that you are in)
      ```
-     
+
 ## Working with pull requests
 
 Glossary:
