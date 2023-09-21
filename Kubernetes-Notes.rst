@@ -9,6 +9,8 @@ Kubernetes Notes
    * `Recupero di valori`_
 #. `Kube API Server`_
 #. `Kube Controller Manager`_
+#. `Kube Scheduler`_
+#. `Kubelet`_
 #. `Author`_     
 
   
@@ -217,6 +219,54 @@ mentre senza ``kubeadmin`` è necessario guardare i parametri con cui è stato a
 o attraverso il comando:
 
 * ``ps aux | grep kube-controller-manager``
+
+`[TOP] <#kubernetes-notes>`_
+
+
+Kube Scheduler
+--------------
+
+Il Kube Scheduler è responsabile della schedulazione dei POD sui Worker Node, ovvero,
+decide quale POD va su quale Worker Node in base ai requisiti del POD.
+
+Il Worker node selezionato sarà quello che potrà ospitare meglio il POD
+sulla base dei criteri usati dallo Scheduler nella scelta.
+
+I criteri per la scelta del Worker Node a cui destinare i POD sono personalizzabili.
+
+**Non carica alcun POD sul Worker Node, cosa che invece farà il Kubelet Agent del Worker Node scelto.**
+
+
+Se il Kube Scheduler è deployato con ``kubeadmin``, i suoi parametri sono recuperabili dal file:
+
+* ``/etc/kubernetes/manifests/kube-scheduler.yaml``
+
+mentre senza ``kubeadmin`` è necessario guardare i parametri con cui è stato avviato il servizio ``kube-scheduler`` da:
+
+* ``/etc/systemd/system/kube-scheduler.service``
+
+o attraverso il comando:
+
+* ``ps aux | grep kube-scheduler``
+
+`[TOP] <#kubernetes-notes>`_
+
+
+Kubelet
+-------
+
+Kubelet si occupa di:
+
+  * registrare il Worker Node sul Kubernetes Cluster
+  * contattare il Container Runtime Engine per deployare un container, o un POD, e renderlo attivo
+  * monitorare continuamente lo stato dei container e dei POD
+  * riportare tutto al Kube API Server
+
+Il Kubelet Agent va sempre installato manualmente su ogni Worker Node, anche se si utilizza ``kubeadmin``.
+
+I parametri del Kubelet Agent sono recuperabili dal file attraverso il comando:
+
+* ``ps aux | grep kubelet``
 
 `[TOP] <#kubernetes-notes>`_
 
