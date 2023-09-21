@@ -57,7 +57,7 @@ Il Master Node si compone di diverse parti (che può essere fatto di soli contai
 
 Dato che tutto gira sottoforma di container, installiamo Docker su tutti i nodi del cluster, compreso il Master Node (se lo vogliamo gestire con i container).
 
-`[TOP] <##kubernetes-notes>`_
+`[TOP] <#kubernetes-notes>`_
 
 Comandi in Kubernetes
 ---------------------
@@ -78,7 +78,7 @@ Il ``cri control utility`` è uno strumento da usare nel caso in cui si voglia f
 Se creo container con ``crictl`` l'agente ``kubelet`` non riconosce il container e lo rimuove.
 Non è da usare nel quotidiano, ma solo all'occorrenza come ultima spiaggia.
 
-`[TOP] <##kubernetes-notes>`_
+`[TOP] <#kubernetes-notes>`_
 
 
 ETCD (v3)
@@ -109,14 +109,14 @@ Recupero di valori
    greeting
    Hello, etcd
 
-`[TOP] <##kubernetes-notes>`_
+`[TOP] <#kubernetes-notes>`_
 
 Author
 ------
 
 * `Marco Malavolti <mailto:marco.malavolti@gmail.com>`_
 
-`[TOP] <##kubernetes-notes>`_
+`[TOP] <#kubernetes-notes>`_
 
 
 .. _ETCD: https://etcd.io/
