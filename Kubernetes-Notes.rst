@@ -9,8 +9,13 @@ Kubernetes Notes
    * `Recupero di valori`_
 #. `Kube API Server`_
 #. `Kube Controller Manager`_
+
+   * `Node Controller`_
+   * `Replica Controller`_
 #. `Kube Scheduler`_
 #. `Kubelet`_
+#. `Kube Proxy`_
+#. `Kubernetes PODs`_
 #. `Author`_     
 
   
@@ -60,6 +65,8 @@ Il Master Node si compone di diverse parti (che può essere fatto di soli contai
     * si assicura che i container che si vogliono attivi lo siano sempre e in replica.
 
 Dato che tutto gira sottoforma di container, installiamo Docker su tutti i nodi del cluster, compreso il Master Node (se lo vogliamo gestire con i container).
+
+Kubernetes usa YAML files per creare qualsiasi cosa: POD, repliche, deployments, services, ....
 
 `[TOP] <#kubernetes-notes>`_
 
@@ -164,13 +171,14 @@ Se il Kube API server è deployato con ``kubeadmin``, i suoi parametri sono recu
 
 * ``/etc/kubernetes/manifests/kube-apiserver.yaml``
 
-mentre senza ``kubeadmin`` è necessario guardare i parametri con cui è stato avviato il servizio ``kube-apiserver`` da:
+mentre senza ``kubeadmin`` è possibile guardare i parametri con cui è stato avviato il servizio ``kube-apiserver`` da:
 
 * ``/etc/systemd/system/kube-apiserver.service``
 
 o attraverso il comando:
 
 * ``ps aux | grep kube-apiserver``
+
 
 `[TOP] <#kubernetes-notes>`_
 
@@ -212,7 +220,7 @@ Se il Kube Controller Manager è deployato con ``kubeadmin``, i suoi parametri s
 
 * ``/etc/kubernetes/manifests/kube-controller-manager.yaml``
 
-mentre senza ``kubeadmin`` è necessario guardare i parametri con cui è stato avviato il servizio ``kube-controller-manager`` da:
+mentre senza ``kubeadmin`` è possibile guardare i parametri con cui è stato avviato il servizio ``kube-controller-manager`` da:
 
 * ``/etc/systemd/system/kube-controller-manager.service``
 
@@ -241,7 +249,7 @@ Se il Kube Scheduler è deployato con ``kubeadmin``, i suoi parametri sono recup
 
 * ``/etc/kubernetes/manifests/kube-scheduler.yaml``
 
-mentre senza ``kubeadmin`` è necessario guardare i parametri con cui è stato avviato il servizio ``kube-scheduler`` da:
+mentre senza ``kubeadmin`` è possibile guardare i parametri con cui è stato avviato il servizio ``kube-scheduler`` da:
 
 * ``/etc/systemd/system/kube-scheduler.service``
 
@@ -257,16 +265,108 @@ Kubelet
 
 Kubelet si occupa di:
 
-  * registrare il Worker Node sul Kubernetes Cluster
-  * contattare il Container Runtime Engine per deployare un container, o un POD, e renderlo attivo
-  * monitorare continuamente lo stato dei container e dei POD
-  * riportare tutto al Kube API Server
+* registrare il Worker Node sul Kubernetes Cluster
+* contattare il Container Runtime Engine per deployare un container, o un POD, e renderlo attivo
+* monitorare continuamente lo stato dei container e dei POD
+* riportare tutto al Kube API Server
 
 Il Kubelet Agent va sempre installato manualmente su ogni Worker Node, anche se si utilizza ``kubeadmin``.
 
 I parametri del Kubelet Agent sono recuperabili dal file attraverso il comando:
 
 * ``ps aux | grep kubelet``
+
+`[TOP] <#kubernetes-notes>`_
+
+
+Kube Proxy
+----------
+
+In un Cluster Kubernetes, ogni POD può raggiungere un altro POD ovunque esso sia grazie ad una rete virtuale interna.
+
+Un POD può dunque raggiungere un altro POD attraverso il suo indirizzo IP, ma gli indirizzi IP non sono persistenti
+e non si può avere la certezza che rimangano sempre gli stessi.
+
+Kube Proxy è un processo eseguito su ogni Worker Node che controlla la comparsa di nuovi servizi
+e per ogni nuovo servizio creato, genera le regole di instradamento del traffico su ogni Worker Node che servono per raggiungerlo.
+Questo obiettivo si può raggiungere con ``iptables``.
+
+Se il Kube Proxy è deployato con ``kubeadmin``, verrà inserito su ogni Worker Node sottoforma di POD:
+
+* ``kubectl get pods -n kube-system``
+
+mentre senza ``kubeadmin`` è possibile recuperare i parametri con cui è stato avviato il servizio ``kube-proxy`` da:
+
+* ``/etc/systemd/system/kube-proxy.service``
+
+o attraverso il comando:
+
+* ``ps aux | grep kube-proxy``
+
+`[TOP] <#kubernetes-notes>`_
+
+
+Kubernetes PODs
+---------------
+
+Il POD è l'oggetto più piccolo presente in Kubernetes e contiene il container che permette l'esecuzione della nostra applicazione.
+Il POD deve essere deployato su di un Worker Node per poter attivare l'applicazione desiderata.
+Di solito un POD contiene un solo container da deployare, ma è possibile che ne contenga anche più di uno.
+Ad esempio: Se un container ha la necessità di un altro container per funzionare adeguatamente,
+entrambi possono restare sullo stesso POD. In questo modo vengono deployati entrambi i container alla replica e vengono distrutti entrambi se serve.
+I container nello stesso POD comunicano tra loro attraverso ``localhost`` e condividono lo stesso spazio disco.
+
+Quando le richieste per l'applicazione deployata con un POD diventano eccessive,
+si deve creare un nuovo POD e deployare una nuova istanza dell'applicazione dividendo il carico.
+Se le istanze sono troppe per un Worker Node, 
+si crea un altro Worker Node in cui caricare il nuovo POD e deployare l'istanza dell'applicazione.
+
+* ``kubectl run nginx --image nginx``:
+
+  Creo un POD e lancio un'istanza di ``nginx`` su di un Worker Node capace di ospitarlo prelevando l'immagine di ``nginx`` direttamente dal Docker Hub, il default docker repository per Kubernetes. (Posso configuare la sorgente delle immagini tra le impostazioni di Kubernetes)
+
+* ``kubectl get pods``:
+
+  Guardo i POD presenti sul mio Kubernetes Cluster.
+
+* ``kubectl describe pod <pod-metadata-name>``:
+
+  Restituisce informazioni utili sul POD.
+
+
+Creare POD in YAML
+""""""""""""""""""
+
+**NOTE**: YAML is Case-Sensitive.
+
+#. Creare un File YAML che definisce il POD (ad esempio: ``my-pod-1.yml``) con almeno:
+
+   #. ``apiVersion``:  versione delle API di Kubernetes
+   #. ``kind``: tipo di oggetto da creare 
+   #. ``metadata``: dizionario che contiene, in modo annidato, le informazioni proprie del POD (name, label, ...).
+
+      Il numero di spazi usati per indentare/annidare i valori nel dizionario deve essere sempre uguale.
+      Aggiungendo ``type: front-end`` a dizionario ``label`` sarà possibile distinguere i POD specifici per il frontend da altri.
+   #. ``spec``: dizionario di liste che indica i container che il POD deve deployare sul Worker Node
+
+      .. code:: yaml
+         :name: my-pod-1-def.yml
+
+         apiVersion: v1
+         kind: Pod
+         metadata:
+           name: my-pod-1
+           label:
+             app: my-app-1
+             type: front-end
+         spec:
+           containers:
+             - name: nginx-container
+               image: nginx
+
+#. Eseguire il comando:
+
+   * ``kubectl create -f my-pod-1.yml``
 
 `[TOP] <#kubernetes-notes>`_
 
