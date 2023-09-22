@@ -16,9 +16,10 @@ Kubernetes Notes
 #. `Kubelet`_
 #. `Kube Proxy`_
 #. `Kubernetes PODs`_
+   * `Creare POD in YAML`_
 #. `Author`_     
 
-  
+
 Contesto
 --------
 
@@ -228,6 +229,8 @@ o attraverso il comando:
 
 * ``ps aux | grep kube-controller-manager``
 
+
+
 `[TOP] <#kubernetes-notes>`_
 
 
@@ -346,7 +349,7 @@ Creare POD in YAML
    #. ``metadata``: dizionario che contiene, in modo annidato, le informazioni proprie del POD (name, label, ...).
 
       Il numero di spazi usati per indentare/annidare i valori nel dizionario deve essere sempre uguale.
-      Aggiungendo ``type: front-end`` a dizionario ``label`` sarà possibile distinguere i POD specifici per il frontend da altri.
+      Aggiungendo ``tier: front-end`` a dizionario ``label`` sarà possibile distinguere i POD specifici per il frontend da altri.
    #. ``spec``: dizionario di liste che indica i container che il POD deve deployare sul Worker Node
 
       .. code:: yaml
@@ -356,17 +359,23 @@ Creare POD in YAML
          kind: Pod
          metadata:
            name: my-pod-1
-           label:
+           labels:
              app: my-app-1
-             type: front-end
+             tier: front-end
          spec:
            containers:
              - name: nginx-container
                image: nginx
 
+      dentro a ``image``, se non si usa Docker Hub, deve essere inserito tutto il path dell'immagine.
+
+      Un modo rapido per creare un file YAML per un POD è il seguente:
+
+      * ``kubectl run nginx --image=nginx --dry-run=client -O yaml > my-pod-1.yml``
+
 #. Eseguire il comando:
 
-   * ``kubectl create -f my-pod-1.yml``
+   * ``kubectl create -f my-pod-1.yml`` oppure ``kubectl apply -f my-pod-1.yml``
 
 `[TOP] <#kubernetes-notes>`_
 
