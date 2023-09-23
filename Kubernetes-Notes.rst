@@ -21,6 +21,7 @@ Kubernetes Notes
 #. `Kubernetes PODs`_
 
    * `Creare POD in YAML`_
+#. `Kubernetes Deployment`_
 #. `Author`_     
 
 
@@ -294,7 +295,7 @@ Sostituito dai **Replica Set**.
 
 Per vedere tutti i Replication Controller creati usare il comando:
 
-* ``kubectl get replicationcontroller``
+* ``kubectl get replicationcontrollers``
 
 Per vedere tutti i POD creati dal Replication Controller creati usare il comando:
 
@@ -354,9 +355,20 @@ Processo che Monitora e Gestisce le repliche dei POD sui Worker Node del Cluster
 
    * ``kubectl create -f my-rs-1.yml`` oppure ``kubectl apply -f my-rs-1.yml``
 
-Per vedere tutti i Replica Set creati usare il comando:
+Per modificare un Replica Set usare uno dei comandi che seguono:
 
-* ``kubectl get replicaset``
+* ``kubectl edit replicaset <replicaset-name>``
+* ``kubectl edit rs <replicaset-name>``
+
+Per vedere tutti i Replica Set creati usare uno dei comandi che seguono:
+
+* ``kubectl get replicasets``
+* ``kubectl get rs``
+
+Per vedere i dettagli di un ``replicaset`` avviato usare uno dei comandi che seguono:
+
+* ``kubectl describe replicaset <replicaset name>``
+* ``kubectl describe rs <replicaset name>``
 
 Per vedere tutti i POD creati dal Replication Controller creati usare il comando:
 
@@ -368,13 +380,17 @@ Perchè le label fungono da guida ai Replica Set che attraverso ``matchLabels`` 
 
 Come posso scalare il numero di repliche di un Replica Set?
 
-#. Aumentando il numero di ``replicas`` nello YAML file che definisce la Replica Set e lanciando ``kubectl replace -f my-rs-1.yml`` (modo 1 - modifico il file ``my-rs-1.yml`` prima)
-#. Aumentando il numero di ``replicas`` del comando ``kubectl scale --replicas=6 -f my-rs-1.yml`` (modo 2 - non modifico alcun file)
+* Modo 1 - Modificando il numero di ``replicas`` sul file YAML ``my-rs-1.yml`` prima di lanciare ``kubectl replace -f my-rs-1.yml`` 
+* Modo 2 - Settando il numero di ``replicas`` del comando ``kubectl scale --replicas=6 -f my-rs-1.yml``
 
 Come posso eliminare un Replica Set?
 
-#. ``kubectl delete -f my-rs-1.yml`` (modo 1 - modifico prima il file ``my-rs-1.yml``) 
-#. ``kubectl delete replicaset my-rs-1`` (modo 2 - non modifico alcun file)
+* ``kubectl delete -f my-rs-1.yml`` (modo 1 - modifico prima il file ``my-rs-1.yml``)
+* ``kubectl delete replicaset my-rs-1`` o ``kubectl delete rs my-rs-1``(modo 2 - non modifico alcun file)
+
+Come visualizzo il manuale delle replicaset?
+
+* ``kubectl explain replicaset``
 
 `[TOP] <#kubernetes-notes>`_
 
@@ -525,6 +541,60 @@ Creare POD in YAML
    * ``kubectl create -f my-pod-1.yml`` oppure ``kubectl apply -f my-pod-1.yml``
 
 `[TOP] <#kubernetes-notes>`_
+
+
+Kubernetes Deployment
+---------------------
+
+Quando, in un ambiente di produzione, andiamo ad aggiornare una componente/applicazione dopo l'altra invece di aggiornarle tutte insieme nello stesso momento, stiamo eseguendo un "rolling update".
+Se l'aggiornamento di una componente/applicazione fallisce per un errore, in un ambiente di produzione si dovrebbe poter "tornare indietro" e ristabilire la piena funzionalità dell'applicazione.
+
+Questo e molto altro è svolto dal **Kubernetes Deployment**.
+
+Come guardare il manuale del Kubernetes Deployment?
+
+* ``kubectl create deployment --help``
+
+Come si crea il Kubernetes Deployment?
+
+#. Definisci il Kuberneted Deployment con un file YAML ``my-kd-1-def.yml``
+  
+   .. code:: yaml
+      :name: my-kd-1-def.yml
+  
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: my-kd-1
+        labels:
+          app: my-kd-app-1
+          type: front-end
+      spec:
+        template:
+          metadata:
+            name: my-pod-1
+            labels:
+              app: my-app-1
+              type: front-end
+          spec:
+            containers:
+              - name: nginx-container
+                image: nginx
+        replicas: 3
+        selector:
+          matchLabels:
+            type: front-end
+
+#. Esegui ``kubectl create -f my-kd-1-def.yml``
+#. Controlla che il Kubernetes Deployment sia stato creato con ``kubectl get deployments``.
+#. Controlla che il Kubernetes Deplyment abbia creato il Replicat Set contenuto nella sua definizione: ``kubectl get replicasets``.
+#. Controlla che il Replica Set abbia creato i POD contenuti nella definizione del Kubernetes Deployment: ``kubectl get pods``.
+
+Per controllare tutto insieme: ``kubectl get all``
+
+Un modo rapido per creare un file YAML per un Kubernetes Deployment è il seguente:
+
+* ``kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml``
 
 
 Author
