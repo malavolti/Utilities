@@ -11,11 +11,15 @@ Kubernetes Notes
 #. `Kube Controller Manager`_
 
    * `Node Controller`_
-   * `Replica Controller`_
+   * `Replication Controller & Replica Set`_
+
+     * `Replication Controller`_
+     * `Replica Set`_
 #. `Kube Scheduler`_
 #. `Kubelet`_
 #. `Kube Proxy`_
 #. `Kubernetes PODs`_
+
    * `Creare POD in YAML`_
 #. `Author`_     
 
@@ -198,25 +202,6 @@ Anche il Kube Controller Manager è un eseguibile di Systemd che ha parametri co
 * ``--node-monitor-grace-period=40s``
 * ``--pov-eviction-timeout=5m0s``
 
-Node Controller
-"""""""""""""""
-
-il Node Controller monitora lo stato dei Worker Node ogni 5 secondi
-ed esegue le azioni necessarie per mantenere le applicazioni in esecuzione con l'aiuto del Kube API Server.
-
-Se non riceve più risposta dal Worker Node, il Node Controller si segna che è in uno stato "non raggiungibile/unreachable",
-ma è solo dopo ulteriori 40 secondi che il Worker Node viene marcato come "non raggiungibile/unreachable".
-
-Una volta entrato nello stato di "non raggiungibile/unreachable", il Worker Node ha 5 minuti per tornare operativo o
-il Node Controller rimuove tutti i suoi POD e li trasferisce su un Worker Node funzionante (se i POD sono parte di un "replica set").
-
-Replica Controller
-""""""""""""""""""
-
-Il Replica Controller monitora lo stato dei "replica set"
-ed esegue le azioni necessarie per mantenere il numero di POD inalterato nei "replica set".
-Se un POD muore, lui ne crea uno nuovo
-
 Se il Kube Controller Manager è deployato con ``kubeadmin``, i suoi parametri sono recuperabili dal file:
 
 * ``/etc/kubernetes/manifests/kube-controller-manager.yaml``
@@ -230,6 +215,166 @@ o attraverso il comando:
 * ``ps aux | grep kube-controller-manager``
 
 
+Node Controller
+"""""""""""""""
+
+il Node Controller monitora lo stato dei Worker Node ogni 5 secondi
+ed esegue le azioni necessarie per mantenere le applicazioni in esecuzione con l'aiuto del Kube API Server.
+
+Se non riceve più risposta dal Worker Node, il Node Controller si segna che è in uno stato "non raggiungibile/unreachable",
+ma è solo dopo ulteriori 40 secondi che il Worker Node viene marcato come "non raggiungibile/unreachable".
+
+Una volta entrato nello stato di "non raggiungibile/unreachable", il Worker Node ha 5 minuti per tornare operativo o
+il Node Controller rimuove tutti i suoi POD e li trasferisce su un Worker Node funzionante (se i POD sono parte di un "replica set").
+
+Replication Controller & Replica Set
+""""""""""""""""""""""""""""""""""""
+
+Il Replication Controller(old way) o il Replica Set(new way) monitora il numero di POD attivi
+ed mantiene il numero di repliche stabilito inalterato. Se un POD muore, lui ne crea subito uno nuovo. 
+Questo permette di non perdere mai l'accesso alle applicazioni web e di sviluppare l'HA(High Availability) per il Cluster Kuberbernetes.
+
+Il Replication Controller o il Replica Set si occupa anche del Bilanciamento del Carico (Load Balancing) e della Scalabilità (Scaling).
+Se il numero di richieste ad un POD aumentano perchè il numero di utenti che lo usano aumenta,
+il Replication Controller o il Replica Set crea repliche del POD sul Worker Node per bilanciare il carico di lavoro
+e mantiene prestante la risposta dell'applicazione.
+Se le risorse di un Worker Node non bastano più a soddisfare le richieste inviate all'applicazione,
+il Replication Controller o il Replica Set sceglie un altro Worker Node con abbastanza risorse
+e crea in esso le repliche necessarie a garantisce la scalabilità della gestione su altri Worker Node.
+
+Replication Controller
+^^^^^^^^^^^^^^^^^^^^^^
+
+Sostituito dai **Replica Set**.
+
+#. Creare un File YAML che definisce il Replication Controller (ad esempio: ``my-rc-1.yml``) con:
+
+   #. ``apiVersion``:  versione delle API di Kubernetes
+   #. ``kind``: tipo di oggetto da creare 
+   #. ``metadata``: dizionario che contiene, in modo annidato, le informazioni proprie del Replication Controller (name, label, ...).
+
+      Il numero di spazi usati per indentare/annidare i valori nel dizionario deve essere sempre uguale.
+      
+      Aggiungendo ``type: front-end`` al dizionario ``labels`` sarà possibile distinguere i Replication Controller specifici per il frontend.
+   #. ``spec``: cosa metto nell'oggetto che sto per creare.
+      
+      Nel caso del Replication Controller, ``spec`` è un template del POD da replicare composto da ``metadata`` e ``spec``.
+
+      .. code:: yaml
+         :name: my-rc-1-def.yml
+
+         apiVersion: v1
+         kind: ReplicationController
+         metadata:
+           name: my-rc-1
+           labels:
+             app: my-rc-app-1
+             type: front-end
+         spec:
+           template:
+             metadata:
+               name: my-pod-1
+               labels:
+                 app: my-app-1
+                 type: front-end
+             spec:
+               containers:
+                 - name: nginx-container
+                   image: nginx
+           replicas: 3
+
+      dentro a ``image``, se non si usa Docker Hub, deve essere inserito tutto il path dell'immagine,
+      mentre ``template`` e ``replicas`` sono fratelli e hanno la stessa indentazione.
+
+      Il campo facoltativo ``selector``, fratello di ``template`` e ``replicas``, serve per indicare al Replication Controller quali POD considerare, dato che può gestire POD al di fuori della sua definizione e creati precedentemente.
+
+#. Eseguire il comando:
+
+   * ``kubectl create -f my-rc-1.yml`` oppure ``kubectl apply -f my-rc-1.yml``
+
+Per vedere tutti i Replication Controller creati usare il comando:
+
+* ``kubectl get replicationcontroller``
+
+Per vedere tutti i POD creati dal Replication Controller creati usare il comando:
+
+* ``kubectl get pods``
+
+Replica Set
+^^^^^^^^^^^
+
+Processo che Monitora e Gestisce le repliche dei POD sui Worker Node del Cluster Kubernetes.
+
+#. Creare un File YAML che definisce il Replica Set (ad esempio: ``my-rs-1.yml``) con:
+
+   #. ``apiVersion``:  versione delle API di Kubernetes
+   #. ``kind``: tipo di oggetto da creare 
+   #. ``metadata``: dizionario che contiene, in modo annidato, le informazioni proprie del Replica Set (name, label, ...).
+
+      Il numero di spazi usati per indentare/annidare i valori nel dizionario deve essere sempre uguale.
+
+      Aggiungendo ``type: front-end`` al dizionario ``labels`` sarà possibile distinguere i Replica Set specifici per il frontend.
+   #. ``spec``: cosa metto nell'oggetto che sto per creare.
+      
+      Nel caso del Replica Set, ``spec`` è un template del POD da replicare composto da ``metadata`` e ``spec``.
+
+      .. code:: yaml
+         :name: my-rs-1-def.yml
+
+         apiVersion: apps/v1
+         kind: ReplicaSet
+         metadata:
+           name: my-rs-1
+           labels:
+             app: my-rs-app-1
+             type: front-end
+         spec:
+           template:
+             metadata:
+               name: my-pod-1
+               labels:
+                 app: my-app-1
+                 type: front-end
+             spec:
+               containers:
+                 - name: nginx-container
+                   image: nginx
+           replicas: 3
+           selector:
+             matchLabels:
+               type: front-end
+
+      dentro a ``image``, se non si usa Docker Hub, deve essere inserito tutto il path dell'immagine,
+      mentre ``template``, ``replicas`` e ``selector`` sono fratelli e hanno la stessa indentazione.
+
+      Il campo ``selector`` aggiuntivo serve per indicare al Replica Set quali POD considerare,
+      dato che può gestire POD al di fuori della sua definizione e creati precedentemente.
+
+#. Eseguire il comando:
+
+   * ``kubectl create -f my-rs-1.yml`` oppure ``kubectl apply -f my-rs-1.yml``
+
+Per vedere tutti i Replica Set creati usare il comando:
+
+* ``kubectl get replicaset``
+
+Per vedere tutti i POD creati dal Replication Controller creati usare il comando:
+
+* ``kubectl get pods``
+
+Perchè è utile assegnare le ``labels`` ai POD o agli oggetti in Kubernetes?
+
+Perchè le label fungono da guida ai Replica Set che attraverso ``matchLabels`` trovano i POD da monitorare.
+
+Come posso scalare il numero di repliche di un Replica Set?
+
+#. Aumentando il numero di ``replicas`` nello YAML file che definisce la Replica Set e lanciando ``kubectl replace -f my-rs-1.yml`` (modo 1 - modifico il file ``my-rs-1.yml`` prima)
+#. Aumentando il numero di ``replicas`` del comando ``kubectl scale --replicas=6 -f my-rs-1.yml`` (modo 2 - non modifico alcun file)
+
+Come posso eliminare un Replica Set?
+
+#. ``kubectl delete -f my-rs-1.yml`` (modo 1 - modifico prima il file ``my-rs-1.yml``) 
+#. ``kubectl delete replicaset my-rs-1`` (modo 2 - non modifico alcun file)
 
 `[TOP] <#kubernetes-notes>`_
 
@@ -349,8 +494,10 @@ Creare POD in YAML
    #. ``metadata``: dizionario che contiene, in modo annidato, le informazioni proprie del POD (name, label, ...).
 
       Il numero di spazi usati per indentare/annidare i valori nel dizionario deve essere sempre uguale.
-      Aggiungendo ``tier: front-end`` a dizionario ``label`` sarà possibile distinguere i POD specifici per il frontend da altri.
-   #. ``spec``: dizionario di liste che indica i container che il POD deve deployare sul Worker Node
+      Aggiungendo ``type: front-end`` a dizionario ``label`` sarà possibile distinguere i POD specifici per il frontend da altri.
+   #. ``spec``: cosa metto nell'oggetto che sto per creare.
+      
+      Nel caso dei POD, ``spec`` è un dizionario di liste che indica i container da deployare sul Worker Node.
 
       .. code:: yaml
          :name: my-pod-1-def.yml
@@ -361,7 +508,7 @@ Creare POD in YAML
            name: my-pod-1
            labels:
              app: my-app-1
-             tier: front-end
+             type: front-end
          spec:
            containers:
              - name: nginx-container
