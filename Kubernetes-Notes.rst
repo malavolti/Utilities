@@ -20,9 +20,12 @@ Kubernetes Notes
 #. `Kube Proxy`_
 #. `Kubernetes PODs`_
 
-   * `Creare POD in YAML`_
+   * `Creare POD in YAML`_7
 #. `Kubernetes Deployment`_
 #. `Kubernetes Services`_
+
+   * `NodePort Kubernetes service`_
+   * `ClusterIP Kubernetes service`_
 #. `Author`_     
 
 
@@ -621,7 +624,7 @@ Il Kubernetes Service è un oggetto come i ReplicaSet, i Deployment, ... che asc
 Ecco alcuni dei Kubernetes Services disponibili:
 
 * NodePort Service: ascolta il traffico di una porta del Worker Node e lo instrada alla porta del POD che esegue l'applicazione.
-* ClusterIP: indirizzo IP virtuale che identifica il servizio dagli altri.
+* ClusterIP: consente di creare una singola interfaccia di accesso a gruppi di POD.
 * LoadBalancer: distribuisce il carico delle richieste sui POD/Container dello stesso ``type``.
 
 `[TOP] <#kubernetes-notes>`_
@@ -671,6 +674,46 @@ Le porte utilizzabili del Worker Node vanno da 30000 a 32767 (valid range).
 #. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services``.
 #. Da questo momento in poi è possibile raggiungere l'applicazione del POD sulla porta 30008 dalla rete locale.
 
+`[TOP] <#kubernetes-notes>`_
+
+ClusterIP Kubernetes service
+""""""""""""""""""""""""""""
+
+Mediamente in un'applicazione web entrano in gioco: Front-End, Back-End e Database.
+Queste 3 componenti possono essere realizzate con diversi POD, ma queste 3 componenti devono poter comunicare tra loro.
+Non possono farlo attraverso il loro indirizzo IP perchè non è statico e può cambiare se vengono distrutti,
+quindi devono usare un Kubernetes ClusterIP service per avere un'interfaccia di accesso.
+
+In poche parole:
+I diversi POD che formano il Front-End verranno messi in comunicazione con i diversi POD del Back-End attraverso un ClusterIP service,
+così come i diversi POD che formano il Back-End verranno messi in comunicazione con i diversi POD del Database attraverso un altro ClusterIP service. I Cluster IP service creeranno l'interfaccia di accesso per tutti i POD del medesimo livello.
+Le richieste per ciascun livello saranno instradate in modo casuale.
+
+
+#. Definisci il Kuberneted Service con un file YAML ``my-cluip-1-def.yml``
+  
+   .. code:: yaml
+      :name: my-cluip-1-def.yml
+  
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: my-ks-1
+      spec:
+        type: ClusterIP
+        ports:
+          - targetPort: 80
+            port: 80
+        selector: 
+            app: my-app-1
+            type: front-end
+
+   ``targetPort`` è la porta su cui risponde l'applicazione istanziata dal POD. Se non valorizzata, assume il valore di ``port``.
+
+   ``port`` è la porta del Kubernetes Service. (OBBLIGATORIO).
+
+#. Esegui ``kubectl create -f my-cluip-1-def.yml``
+#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services``.
 
 `[TOP] <#kubernetes-notes>`_
 
