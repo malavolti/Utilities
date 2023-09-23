@@ -22,6 +22,7 @@ Kubernetes Notes
 
    * `Creare POD in YAML`_
 #. `Kubernetes Deployment`_
+#. `Kubernetes Services`_
 #. `Author`_     
 
 
@@ -66,7 +67,7 @@ Il Master Node si compone di diverse parti (che può essere fatto di soli contai
       * Inserimento di nuovi Worker Node nel Cluster
       * Gestione dei Worker Node non più disponibili o distrutti
 
-  * replication-controller: 
+  * replication-controller:
 
     * si assicura che i container che si vogliono attivi lo siano sempre e in replica.
 
@@ -246,7 +247,7 @@ e crea in esso le repliche necessarie a garantisce la scalabilità della gestion
 Replication Controller
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Sostituito dai **Replica Set**.
+Sostituito dai `Replica Set`_.
 
 #. Creare un File YAML che definisce il Replication Controller (ad esempio: ``my-rc-1.yml``) con:
 
@@ -596,6 +597,82 @@ Un modo rapido per creare un file YAML per un Kubernetes Deployment è il seguen
 
 * ``kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml``
 
+`[TOP] <#kubernetes-notes>`_
+
+Kubernetes Services
+-------------------
+
+I Kubernetes Services sono oggetti che connettono tra loro i componenti interni ed esterni delle applicazioni deployate attraverso i POD.
+
+Se per esempio un'applicazione web è formata da una parte Front-End, una parte Back-End e un Database esterno, 
+allora i Kubernetes Services consentiranno:
+
+#. alla parte Front-End di essere raggiunta dagli utenti esterni che la devono utilizzare,
+#. alla parte Back-End di essere raggiunta dalla parte Front-End,
+#. al Database di essere raggiunto dalla parte Back-End.
+
+Ogni Worker Node ha il proprio indirizzo IP (192.168.1.5), mentre ogni POD ha il suo (10.244.0.3), ma stanno su due reti differenti.
+Non riusciranno mai a parlare tra loro essendo su reti differenti. 
+Il risultato desiderato è quello di poter raggiungere l'applicazione di un POD utilizzando l'IP del Worker Node, 
+ma per farlo Serve qualcosa che mappi le richieste e le instradi nel modo corretto al POD e viceversa.
+
+Il Kubernetes Service è un oggetto come i ReplicaSet, i Deployment, ... che ascolta il traffico di una porta del Worker Node e lo instrada alla porta del POD che esegue l'applicazione.
+
+Ecco alcuni dei Kubernetes Services disponibili:
+
+* NodePort Service: ascolta il traffico di una porta del Worker Node e lo instrada alla porta del POD che esegue l'applicazione.
+* ClusterIP: indirizzo IP virtuale che identifica il servizio dagli altri.
+* LoadBalancer: distribuisce il carico delle richieste sui POD/Container dello stesso ``type``.
+
+`[TOP] <#kubernetes-notes>`_
+
+NodePort Kubernetes service
+"""""""""""""""""""""""""""
+
+Le porte utilizzabili del Worker Node vanno da 30000 a 32767 (valid range).
+
+#. Definisci il Kuberneted Service con un file YAML ``my-ks-1-def.yml``
+  
+   .. code:: yaml
+      :name: my-ks-1-def.yml
+  
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: my-ks-1
+      spec:
+        type: NodePort
+        ports:
+          - targetPort: 80
+            port: 80
+            nodePort: 30008
+        selector:
+          name: my-pod-1
+          labels:
+            app: my-app-1
+            type: front-end
+
+
+   ``spec['type']`` può assumere il valore di ``NodePort``, ``ClusterIP`` o ``LoadBalancer``.
+
+   ``spec['ports']`` è una lista contenente la mappatura delle porte.
+
+   ``targetPort`` è la porta su cui risponde l'applicazione istanziata dal POD. Se non valorizzata, assume il valore di ``port``.
+
+   ``port`` è la porta del Kubernetes Service. (OBBLIGATORIO).
+
+   ``nodePort`` è la porta del Worker Node. Se non valorizzata, assume un valore casuale valido.
+
+   ``selector`` è il modo attraverso cui il NodePort service comprende per quale POD agire. Più sono le ``labels`` da controllare, più saranno specifici i POD da connettere, anche su Worker Node differenti.
+
+   Se, ad esempio, lasciassi solo la label ``app: my-app-1``, il Kubernetes NodePort service agirebbe per tutti i POD con quella label e non solo per quelli del front-end. Al bilanciamento del carico (Load Balancing) delle richieste ai POD coinvolti ci pensa già il Kubernetes Service.
+
+#. Esegui ``kubectl create -f my-ks-1-def.yml``
+#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services``.
+#. Da questo momento in poi è possibile raggiungere l'applicazione del POD sulla porta 30008 dalla rete locale.
+
+
+`[TOP] <#kubernetes-notes>`_
 
 Author
 ------
