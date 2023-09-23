@@ -20,7 +20,7 @@ Kubernetes Notes
 #. `Kube Proxy`_
 #. `Kubernetes PODs`_
 
-   * `Creare POD in YAML`_7
+   * `Creare POD in YAML`_
 #. `Kubernetes Deployment`_
 #. `Kubernetes Services`_
 
