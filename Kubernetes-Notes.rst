@@ -875,6 +875,19 @@ E se voglio cancellare tutto e ricrearlo?
 Kubectl Apply
 -------------
 
+Quando viene usato il comando ``kubectl apply -f my-def-file.yml``, Kubernetes mette a confronto:
+
+* Il file locale contenente la definizione dell'oggetto: ``my-def-file.yml``
+* La configurazione attiva sul Kubernetes Cluster (Live Object)
+* L'ultima configurazione applicata dell'oggetto (Last applied configuration)
+
+Ad ogni aggiornamento/modifica al file locale, l'esecuzione di ``kubectl apply`` 
+provoca l'aggiornamento della Live Object e dell'ultima configurazione applicata.
+
+Ad ogni rimozione sul file locale, l'esecuzione di ``kubectl apply`` 
+provoca la rimozione sulla Live Object, ma non sulla ``Last applied configuration``.
+In questo modo è possibile capire cosa è stato rimosso se dovesse servire.
+
 `[TOP] <#kubernetes-notes>`_
 
 Author
