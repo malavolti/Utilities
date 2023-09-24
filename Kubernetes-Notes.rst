@@ -26,6 +26,10 @@ Kubernetes Notes
 
    * `NodePort Kubernetes service`_
    * `ClusterIP Kubernetes service`_
+   * `LoadBalancer Kubernetes service`_
+#. `Namespaces`_
+#. `Imperativo VS Dichiarativo`_
+#. `Kubectl Apply`_
 #. `Author`_     
 
 
@@ -538,7 +542,10 @@ Creare POD in YAML
 
       Un modo rapido per creare un file YAML per un POD è il seguente:
 
-      * ``kubectl run nginx --image=nginx --dry-run=client -O yaml > my-pod-1.yml``
+      * ``kubectl run nginx --image=nginx --dry-run=client -o yaml > my-pod-1.yml``
+
+        ``--dry-run=client``: impedisce la creazione di qualsiasi oggetto Kubernetes e indica solo se è possibile crearlo o se il comando è errato.
+        ``-o yaml``: genera la definizione YAML dell'oggetto in output.
 
 #. Eseguire il comando:
 
@@ -590,13 +597,13 @@ Come si crea il Kubernetes Deployment?
             type: front-end
 
 #. Esegui ``kubectl create -f my-kd-1-def.yml``
-#. Controlla che il Kubernetes Deployment sia stato creato con ``kubectl get deployments``.
+#. Controlla che il Kubernetes Deployment sia stato creato con ``kubectl get deployments`` o ``kubectl get deploy``.
 #. Controlla che il Kubernetes Deplyment abbia creato il Replicat Set contenuto nella sua definizione: ``kubectl get replicasets``.
 #. Controlla che il Replica Set abbia creato i POD contenuti nella definizione del Kubernetes Deployment: ``kubectl get pods``.
 
 Per controllare tutto insieme: ``kubectl get all``
 
-Un modo rapido per creare un file YAML per un Kubernetes Deployment è il seguente:
+Un modo rapido per creare un file YAML per un Kubernetes Deployment con replica 4 è il seguente:
 
 * ``kubectl create deployment --image=nginx nginx --replicas=4 --dry-run=client -o yaml > nginx-deployment.yaml``
 
@@ -624,13 +631,15 @@ Il Kubernetes Service è un oggetto come i ReplicaSet, i Deployment, ... che asc
 Ecco alcuni dei Kubernetes Services disponibili:
 
 * NodePort Service: ascolta il traffico di una porta del Worker Node e lo instrada alla porta del POD che esegue l'applicazione.
-* ClusterIP: consente di creare una singola interfaccia di accesso a gruppi di POD.
+* ClusterIP: consente di creare una singola interfaccia di accesso a gruppi di POD all'interno del Kubernetes Cluster.
 * LoadBalancer: distribuisce il carico delle richieste sui POD/Container dello stesso ``type``.
 
 `[TOP] <#kubernetes-notes>`_
 
 NodePort Kubernetes service
 """""""""""""""""""""""""""
+
+Questo Kubernetes Service consente alle applicazioni deployate dai POD nei container di essere raggiunte dall'esterno su di una specifica porta.
 
 Le porte utilizzabili del Worker Node vanno da 30000 a 32767 (valid range).
 
@@ -671,7 +680,7 @@ Le porte utilizzabili del Worker Node vanno da 30000 a 32767 (valid range).
    Se, ad esempio, lasciassi solo la label ``app: my-app-1``, il Kubernetes NodePort service agirebbe per tutti i POD con quella label e non solo per quelli del front-end. Al bilanciamento del carico (Load Balancing) delle richieste ai POD coinvolti ci pensa già il Kubernetes Service.
 
 #. Esegui ``kubectl create -f my-ks-1-def.yml``
-#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services``.
+#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services`` o ``kubectl get svc``.
 #. Da questo momento in poi è possibile raggiungere l'applicazione del POD sulla porta 30008 dalla rete locale.
 
 `[TOP] <#kubernetes-notes>`_
@@ -680,15 +689,13 @@ ClusterIP Kubernetes service
 """"""""""""""""""""""""""""
 
 Mediamente in un'applicazione web entrano in gioco: Front-End, Back-End e Database.
-Queste 3 componenti possono essere realizzate con diversi POD, ma queste 3 componenti devono poter comunicare tra loro.
-Non possono farlo attraverso il loro indirizzo IP perchè non è statico e può cambiare se vengono distrutti,
-quindi devono usare un Kubernetes ClusterIP service per avere un'interfaccia di accesso.
+Queste 3 componenti possono essere realizzate con diversi POD che devono poter comunicare tra loro.
+Non possono farlo in modo sicuro attraverso il proprio indirizzo IP perchè, non essendo statico, può cambiare se i POD vengono distrutti,
+quindi devono usare il ClusterIP Kubernetes service per avere un'interfaccia di accesso e comunicazione.
 
 In poche parole:
-I diversi POD che formano il Front-End verranno messi in comunicazione con i diversi POD del Back-End attraverso un ClusterIP service,
-così come i diversi POD che formano il Back-End verranno messi in comunicazione con i diversi POD del Database attraverso un altro ClusterIP service. I Cluster IP service creeranno l'interfaccia di accesso per tutti i POD del medesimo livello.
-Le richieste per ciascun livello saranno instradate in modo casuale.
-
+I diversi POD che formano il Front-End verranno messi in comunicazione con i diversi POD del Back-End attraverso un ClusterIP Kubernetes service, così come i diversi POD che formano il Back-End verranno messi in comunicazione con i diversi POD del Database attraverso un altro ClusterIP Kubernetes service. I ClusterIP Kubernetes service creano l'interfaccia di accesso per tutti i POD del medesimo livello.
+Le richieste per ciascun livello vengono instradate in modo casuale.
 
 #. Definisci il Kuberneted Service con un file YAML ``my-cluip-1-def.yml``
   
@@ -713,7 +720,160 @@ Le richieste per ciascun livello saranno instradate in modo casuale.
    ``port`` è la porta del Kubernetes Service. (OBBLIGATORIO).
 
 #. Esegui ``kubectl create -f my-cluip-1-def.yml``
-#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services``.
+#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services`` o ``kubectl get svc``.
+
+`[TOP] <#kubernetes-notes>`_
+
+
+LoadBalancer Kubernetes service
+"""""""""""""""""""""""""""""""
+
+Questo Kubernetes Service consente di distribuire il carico delle richieste verso un'applicazione spalmata su più POD/Worker node
+fornendo un unico punto di accesso all'applicazione.
+Questo lavoro di intercettazione delle richieste e indirizzamento delle stesse per conto dei POD/Worker node relativi all'applicazione
+si chiama "Load Balancing".
+
+Per creare un LoadBalancer Kubernetes service serve:
+
+#. Definire il Kuberneted Service con un file YAML ``my-loadbalancer-1-def.yml``
+  
+   .. code:: yaml
+      :name: my-loadbalancer-1-def.yml
+  
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: my-lb-1
+      spec:
+        type: loadBalancer
+        ports:
+          - targetPort: 80
+            port: 80
+            nodePort: 30008
+
+   ``targetPort`` è la porta su cui risponde l'applicazione istanziata dal POD. Se non valorizzata, assume il valore di ``port``.
+
+   ``port`` è la porta del Kubernetes Service. (OBBLIGATORIO).
+
+   ``nodePort`` è la porta del Worker Node. Se non valorizzata, assume un valore casuale valido.
+
+#. Esegui ``kubectl create -f my-loadbalancer-1-def.yml`` **su una Cloud che supporta questo Kubernetes service: Google Cloud Platform, AWS, Azure**. Farlo su un ambiente che non lo supporta, risulterebbe uguale a istanziare un NodePort Kubernetes service.
+#. Controlla che il Kubernetes Service sia stato creato con ``kubectl get services`` o ``kubectl get svc``.
+
+`[TOP] <#kubernetes-notes>`_
+
+Namespaces
+----------
+
+I Namespace in un Kubernetes Cluster servono per distribuire le risorse presenti nel Kubernetes Cluster
+e, attraverso le Policy, decidere a chi destinarle.
+
+Kubernetes parte con i seguenti namespace:
+
+#. ``default``: usato per i POD, Deplyments, Serivices creati dall'utente che utilizza il Kubernetes Cluster.
+#. ``kube-system``: usato per i POD, Deployments, Service interni al Kubernetes Cluster. In questo modo non è possibile che l'utente possa intaccare il sistema di Kubernetes.
+#. ``kube-public``: usato per i POD, Deployments, Service che tutti gli utenti creati.
+
+Quando si utilizza il namespace ``default`` non è necessario indicare il nome del namespace per richiamare il POD/Deployment/Service,
+ma se si vuole usare un POD/Deployment/Service di un altro namespace lo si deve specificare nel nome dell'oggetto che si vuole.
+
+``db-service.dev.svc.cluster.local``
+
+* ``db-service``: indica l'oggetto Kubernetes che si vuole.
+* ``dev``: indica il namespace di riferimento.
+* ``svc``: indica che si tratta di un Kubernetes Service.
+* ``cluster.local`` è il dominio di default di un Kubernetes Cluster.
+
+Per trovare i POD di un altro namespace è necessario specificarlo con ``--namespace=<NAMESPACE-NAME>`` o ``-n=<NAMESPACE-NAME>``:
+
+* ``kubectl get pods --namespace=kube-system`` o ``kubectl get pods -n=kube-system``
+
+Per creare i POD in un altro namespace è necessario specificarlo con ``--namespace=<NAMESPACE-NAME>``:
+
+* ``kubectl create -f my-pod-1.yml --namespace=dev`` o ``kubectl create -f my-pod-1.yml -n=dev``
+
+oppure inserire il campo ``namespace: dev`` nel ``my-pod-1.yml`` in ``metadata`` ed eseguire:
+
+* ``kubectl create -f my-pod-1.yml``
+
+in questo modo il POD verrà sempre creato nel namespace ``dev``.
+
+Come si crea un nuovo Namespace?
+
+#. Definire il Kuberneted Namespace con un file YAML ``my-dev-namespace-def.yml``
+  
+   .. code:: yaml
+      :name: my-dev-namespace-def.yml
+  
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: dev
+
+#. Esegui ``kubectl create -f my-dev-namespace-def.yml`` oppure ``kubectl create namespace dev``.
+#. Controlla che il Namespace sia stato creato con ``kubectl get namespaces`` o ``kubectl get ns``.
+
+Come posso passare da un namespace all'altro senza più specificarlo nel comando o nello YAML file?
+
+``kubectl config set-context $(kubectl config current-context) --namespace=dev``
+
+Come vedo i POD di tutti i namespace?
+
+``kubectl get pods --all-namespaces`` o ``kubectl get pods -A``
+
+Come limito le risorse disponibili per un Namespace?
+
+#. Definire il ResourceQuota con un file YAML ``my-resource-quota-def.yml``
+  
+   .. code:: yaml
+      :name: my-resource-quota.yml
+  
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata:
+        name: dev-quota
+        namespace: dev
+      spec:
+        hard:
+          pods: "10"
+          requests.cpu: "4"
+          requests.memory: "5Gi"
+          limits.cpu: "10"
+          limits.memory: "10Gi"
+
+#. Esegui ``kubectl create -f my-resource-quota-def.yml``.
+
+`[TOP] <#kubernetes-notes>`_
+
+
+Imperativo VS Dichiarativo
+--------------------------
+
+In Kubernetes sto usando l'imperativo quando istruisco dettagliatamente cosa deve fare Kubernetes sull'infrastruttura:
+
+* Creare un Deployment: ``kubectl create deployment --image=nginx nginx``
+* Creare un oggetto attraverso un file YAML: ``kubectl create -f object-def.yml``
+* Replicare un oggetto: ``kubectl scale deployment nginx --replica=5``
+
+Sono comandi one-shot che non vengono tracciati se non fosse per la history del proprio terminale.
+Rende difficile la vita a chi vuole capire come sono stati creati, modificati o eliminati degli oggetti sul Kubernetes Cluster.
+Non è indicato per la produzione.
+
+In Kubernetes uso il dichiarativo quando, con un solo file di configurazione, lascio decidere a Kubernetes quello che è meglio fare per ottenere quello che mi serve. Il dichiarativo usa ``kubernetes apply -f config-def.yml`` o ``kubernetes apply -f /path/of/config/dir/files/`` (per applicare quanto richiesto da tutti i file di configurazione interni alla cartella).
+
+Quando si vuole fare una modifica ad un oggetto Kubernetes istanziato con uno YAML file si deve:
+
+#. Modificare il file YAML
+#. Lanciare ``kubectl replace -f my-conf-file.yml``
+
+E se voglio cancellare tutto e ricrearlo?
+
+* ``kubectl replace --force -f my-config-file.yml``
+
+`[TOP] <#kubernetes-notes>`_
+
+Kubectl Apply
+-------------
 
 `[TOP] <#kubernetes-notes>`_
 
