@@ -36,47 +36,54 @@ Kubernetes Notes
 Contesto
 --------
 
-Kubernetes è governato dalle sue API ed il Kube API Server è il componente responsabile dell'orchestrazione di tutti i componenti interni al Cluster Kubernetes.
+Kubernetes è governato da API ed il Kube API Server è il componente responsabile al coordinamento di tutti i componenti interni al Cluster Kubernetes.
 
-Un Cluster Kubernetes consiste in un insieme di nodi che ospitano le applicazioni sottoforma di container.
+Un Cluster Kubernetes si compone di un'insieme di server (nodi) che ospitano le applicazioni sottoforma di container.
 
-Un Worker Node è il nodo capace di ospitare le applicazioni sottoforma di container, 
-mentre il Master Node si occupa di gestire il caricamento dei container sul/sui Worker Node e del loro monitoraggio.
+Un Worker Node è il server capace di ospitare le applicazioni sottoforma di container, 
+mentre il Master Node si occupa di gestire il caricamento dei container sul/sui Worker Node e di monitorarli tutti.
 
-Un Worker Node viene guidato da un "kubelet" agent che carica o distrugge i container che ospita.
+Ogni Worker Node possiede un "kubelet" agent e lo usa per:
+
+* unirsi al cluster Kubernetes
+* ottenere la lista dei container da ospitare
+* eseguire i container necessari
+* distruggere i container non necessari
+* riportare lo stato dei container
+* riportare lo stato del Worker Node stesso al Kube API Server
 
 Il Kube API Server tiene monitorato lo stato dei singoli Worker Node attraverso le informazioni che periodicamente riceve dai singoli "kubelet" agent.
 
-La comunicazione tra i container presenti sui vari Worker Node è demandata al Kube Proxy Service di ogni Worker Node.
+La comunicazione tra i container presenti sui vari Worker Node è gestita dal Kube Proxy Service di ogni Worker Node.
 
-Il Master Node si compone di diverse parti (che può essere fatto di soli container):
+Il Master Node si compone di diverse parti (che possono essere fatte di soli container):
 
 * ETCD:
 
-  * è un database sempre attivo e disponibile che memorizza informazioni sottoforma di oggetti <chiave>:<valore> quali:
+  * è un database sempre attivo e disponibile che memorizza le informazioni sottoforma di oggetti <chiave>:<valore>. Ad esempio:
 
     * Su quale/Da quale Worker Node il container è stato caricato/scaricato
-    * Giorno e Ora del caricamento/scaricamentole informazioni sui container caricati/scaricati
+    * Giorno e Ora del caricamento/scaricamento delle informazioni sui container caricati/scaricati
     * ...
 
-  * kube-scheduler:
+* kube-scheduler:
 
-    * sceglie il Worker Node giusto in cui inserire un container sulla base di:
+  * sceglie il Worker Node giusto in cui inserire un container sulla base di:
 
-      * risorse disponibili al Worker Node
-      * risorse richieste dal container
-      * ...
+    * risorse disponibili nel Worker Node
+    * risorse richieste dal container
+    * ...
 
-  * node-controller:
+* node-controller:
 
-    * si occupa della gestione dei Worker Node:
+  * gestisce i Worker Node:
 
-      * Inserimento di nuovi Worker Node nel Cluster
-      * Gestione dei Worker Node non più disponibili o distrutti
+    * Inserendo i nuovi Worker Node nel Cluster
+    * Rimuovendo i Worker Node non più disponibili o distrutti
 
-  * replication-controller:
+* replication-controller:
 
-    * si assicura che i container che si vogliono attivi lo siano sempre e in replica.
+  * si assicura che i container che si vogliono attivi lo siano sempre e in replica.
 
 Dato che tutto gira sottoforma di container, installiamo Docker su tutti i nodi del cluster, compreso il Master Node (se lo vogliamo gestire con i container).
 
@@ -91,15 +98,27 @@ Il supporto a Docker è stato rimosso a favore di Containerd, quindi non è poss
 
 Si deve ricorrere a ``nerdctl`` che è molto simile a ``docker``:
 
-* ``docker run --name ubuntu ubuntu:22.04`` diventa
+* .. code-block:: bash
 
-  ``nerdctl run --name ubuntu ubuntu:22.04``
+     docker run --name ubuntu ubuntu:22.04 
 
-* ``docker run --name webserver -p 80:80 -d nginx`` diventa
+  diventa
 
-  ``nerdctl run --name webserver -p 80:80 -d nginx``
+  .. code-block:: bash
 
-Il ``cri control utility`` è uno strumento da usare nel caso in cui si voglia fare debugging.
+     nerdctl run --name ubuntu ubuntu:22.04
+
+* .. code-block:: bash
+
+     docker run --name webserver -p 80:80 -d nginx
+
+  diventa
+
+  .. code-block:: bash
+
+     nerdctl run --name webserver -p 80:80 -d nginx
+
+Il Container Runtime Interface control utility (``cri control utility``) è uno strumento da usare nel caso in cui si voglia fare debugging.
 Se creo container con ``crictl`` l'agente ``kubelet`` non riconosce il container e lo rimuove.
 Non è da usare nel quotidiano, ma solo all'occorrenza come ultima spiaggia.
 
@@ -111,17 +130,17 @@ ETCD (v3)
 
 `ETCD`_ è un database le cui tabelle sono composte da solo 2 colonne: 
 
-+----------+----------+
-| **KEY**  |**VALUE** |
-+----------+----------+
-|  Nome    | Marco    |
-+----------+----------+
++----------+-----------+
+| **KEY**  | **VALUE** |
++----------+-----------+
+|  Nome    |  Marco    |
++----------+-----------+
 
 che memorizza tutte le informazioni riguardanti il Cluster Kubernetes.
 Solamente quando l'informazione è stata memorizzata su ETCD può dirsi "completata".
 
-Il parametro ``--advertise-client-urls`` dell'eseguibile di ETCD indica l'indirizzo e la porta che usa
-per ricevere le informazioni dal Cluster.
+Il parametro ``--advertise-client-urls`` dell'eseguibile di ETCD indica l'indirizzo
+e la porta utilizzati per ricevere le informazioni dal Cluster.
 Questo indirizzo va dato al Kube API Server per mettersi in contatto con l'ETCD server.
 
 Kubernetes memorizza i dati con una struttura avente come radice la cartella ``registry/``.
