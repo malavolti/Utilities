@@ -36,16 +36,16 @@ Kubernetes Notes
 Contesto
 --------
 
-Kubernetes è governato da API ed il Kube API Server è il componente responsabile al coordinamento di tutti i componenti interni al Cluster Kubernetes.
+Un Cluster Kubernetes è governato da API ed il Kube API Server è il componente responsabile al coordinamento di tutti gli elementi che lo compongono.
 
 Un Cluster Kubernetes si compone di un'insieme di server (nodi) che ospitano le applicazioni sottoforma di container.
 
-Un Worker Node è il server capace di ospitare le applicazioni sottoforma di container, 
-mentre il Master Node si occupa di gestire il caricamento dei container sul/sui Worker Node e di monitorarli tutti.
+Un Worker Node è un server capace di ospitare applicazioni sottoforma di container, 
+mentre il Master Node gestisce il caricamento dei container sui Worker Node e li monitorara.
 
 Ogni Worker Node possiede un "kubelet" agent e lo usa per:
 
-* unirsi al cluster Kubernetes
+* unirsi al Cluster Kubernetes
 * ottenere la lista dei container da ospitare
 * eseguire i container necessari
 * distruggere i container non necessari
