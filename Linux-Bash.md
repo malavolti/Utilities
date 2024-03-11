@@ -43,39 +43,37 @@
 This example shows how to add the user "username" and enable him to SSH access.
 
 ```bash
-sudo adduser --home /home/username --group --shell /bin/bash username
+sudo useradd -m /home/username -g username -s /bin/bash
 sudo mkdir /home/username/.ssh
-sudo touch /home/username/.ssh/authorized_keys
-sudo chown -R username:username /home/username/
 sudo chmod 0700 /home/username/.ssh
+sudo touch /home/username/.ssh/authorized_keys
 sudo chmod 0600 /home/username/.ssh/authorized_keys
 sudo systemctl reload ssh.service
 ```
-(paste the '```id_rsa.pub```' of the new user into his '```authorized_keys```' file)
+(paste the '```id_rsa.pub```' of the new user into the '```authorized_keys```' file)
 
 ### How to add a new system user and provide SSH access to him 
 
 This example shows how to add the user "username" and enable him to SSH access.
 
 ```bash
-sudo adduser --system --group --shell /bin/bash username
+sudo useradd -m /home/username -g username -s /bin/bash --system
 sudo mkdir /home/username/.ssh
-sudo touch /home/username/.ssh/authorized_keys
-sudo chown -R username:username /home/username/
 sudo chmod 0700 /home/username/.ssh
+sudo touch /home/username/.ssh/authorized_keys
 sudo chmod 0600 /home/username/.ssh/authorized_keys
 sudo systemctl reload ssh.service
 ```
-(paste the '```id_rsa.pub```' of the new user into his '```authorized_keys```' file)
+(paste the '```id_rsa.pub```' of the new user into the '```authorized_keys```' file)
 
 ### How to add/remove an user to 'sudo'(ROOT) user group
 
 ```bash
-sudo adduser username sudo
+sudo usermod -a -G sudo username
 ```
 
 ```bash
-sudo deluser username sudo
+sudo gpasswd -d username sudo
 ```
 
 ### How to remove an user from the system completely
