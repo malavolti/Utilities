@@ -45,8 +45,10 @@ This example shows how to add the user "username" and enable him to SSH access.
 ```bash
 sudo useradd -m /home/username -g username -s /bin/bash
 sudo mkdir /home/username/.ssh
+sudo chown username:username /home/username/.ssh
 sudo chmod 0700 /home/username/.ssh
 sudo touch /home/username/.ssh/authorized_keys
+sudo chown username:username /home/username/.ssh/authorized_keys
 sudo chmod 0600 /home/username/.ssh/authorized_keys
 sudo systemctl reload ssh.service
 ```
@@ -59,8 +61,10 @@ This example shows how to add the user "username" and enable him to SSH access.
 ```bash
 sudo useradd -m /home/username -g username -s /bin/bash --system
 sudo mkdir /home/username/.ssh
+sudo chown username:username /home/username/.ssh
 sudo chmod 0700 /home/username/.ssh
 sudo touch /home/username/.ssh/authorized_keys
+sudo chown username:username /home/username/.ssh/authorized_keys
 sudo chmod 0600 /home/username/.ssh/authorized_keys
 sudo systemctl reload ssh.service
 ```
