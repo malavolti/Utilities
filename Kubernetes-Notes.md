@@ -8,8 +8,7 @@
 4.  [Kube API Server](#kube-api-server)
 5.  [Kube Controller Manager](#kube-controller-manager)
     -   [Node Controller](#node-controller)
-    -   [Replication Controller & Replica
-        Set](#replication-controller-replica-set)
+    -   [Replication Controller & Replica Set](#replication-controller--replica-set)
         -   [Replication Controller](#replication-controller)
         -   [Replica Set](#replica-set)
 6.  [Kube Scheduler](#kube-scheduler)
@@ -21,8 +20,7 @@
 11. [Kubernetes Services](#kubernetes-services)
     -   [NodePort Kubernetes service](#nodeport-kubernetes-service)
     -   [ClusterIP Kubernetes service](#clusterip-kubernetes-service)
-    -   [LoadBalancer Kubernetes
-        service](#loadbalancer-kubernetes-service)
+    -   [LoadBalancer Kubernetes service](#loadbalancer-kubernetes-service)
 12. [Namespaces](#namespaces)
 13. [Imperativo VS Dichiarativo](#imperativo-vs-dichiarativo)
 14. [Kubectl Apply](#kubectl-apply)
@@ -129,29 +127,11 @@ ultima spiaggia.
 
 ## ETCD (v3)
 
-[ETCD](https://etcd.io/) è un database le cui tabelle sono composte da
-solo 2 colonne:
+[ETCD](https://etcd.io/) è un database le cui tabelle sono composte da solo 2 colonne:
 
-<table style="width:29%;">
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 15%" />
-</colgroup>
-<tbody>
-<tr>
-<td><strong>KEY</strong></td>
-<td><strong>VALUE</strong></td>
-</tr>
-<tr>
-<td><blockquote>
-<p>Nome</p>
-</blockquote></td>
-<td><blockquote>
-<p>Marco</p>
-</blockquote></td>
-</tr>
-</tbody>
-</table>
+| KEY  | VALUE |
+|------|-------|
+| Nome | Marco |
 
 che memorizza tutte le informazioni riguardanti il Cluster Kubernetes.
 Solamente quando l'informazione è stata memorizzata su ETCD può dirsi
