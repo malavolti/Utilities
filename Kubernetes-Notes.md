@@ -45,7 +45,7 @@ Ogni Worker Node possiede un "kubelet" agent e lo usa per:
 -   ottenere la lista dei container da ospitare
 -   eseguire i container necessari
 -   distruggere i container non necessari
--   riportare lo stato dei container
+-   riportare lo stato dei container al Master Node
 -   riportare lo stato del Worker Node stesso al Kube API Server
 
 Il Kube API Server tiene monitorato lo stato dei singoli Worker Node
