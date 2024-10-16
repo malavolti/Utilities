@@ -24,7 +24,10 @@
 12. [Namespaces](#namespaces)
 13. [Imperativo VS Dichiarativo](#imperativo-vs-dichiarativo)
 14. [Kubectl Apply](#kubectl-apply)
-15. [Author](#author)
+15. [Scheduling](#scheduling)
+    - [Manual Scheduling](#manual-scheduling)
+16. [Labels & Selectors](#labels--selectors)
+17. [Author](#author)
 
 ## Contesto
 
@@ -1053,6 +1056,113 @@ Ad ogni rimozione sul file locale, l'esecuzione di `kubectl apply`
 provoca la rimozione sulla Live Object, ma non sulla
 `Last applied configuration`. In questo modo è possibile capire cosa è
 stato rimosso se dovesse servire.
+
+[\[TOP\]](#kubernetes-notes)
+
+## Scheduling
+
+Kubernetes decide dove schedulare un POD sulla base del parametro "nodeName" posto all'interno dello YAML file del POD.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod-1
+  labels:
+    app: my-app-1
+    type: front-end
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+  nodeName: node-02
+```
+
+Lo scheduler predefinito di Kubernetes, scansiona tutti i POD alla ricerca di quelli in cui non è presente il parametro `nodeName`, decide quali di quelli trovati è adatto per essere spostato
+e stabilisce su quale Worker Node metterlo settando il valore mancante di `nodeName`.
+
+### Manual Scheduling
+
+Nel caso in cui lo scheduler predefinito di Kubernetes non sia presente, l'avvio di un POD lo porterà in uno stato **pending** in quanto non può essere selezionato alcun Worker Node in cui eseguirlo.
+Si deve quindi intervenire con il "Manual Scheduling" andando ad aggiungere il parametro `nodeName` allo YAML del POD prima della sua creazione.
+
+E per i POD pending? Si deve creare un oggetto "Binding":
+
+```yaml
+apiVersion: v1
+kind: Binding
+metadata:
+  name: my-binding-obj
+target:
+  apiVersion: v1
+  kind: Node
+  name: node-02
+```
+
+ed inviarlo alle API di binding del POD via POST request convertendo lo YAML in JSON.
+
+Ma molto meglio modificare lo YAML e crearlo bene.
+
+[\[TOP\]](#kubernetes-notes)
+
+## Labels & Selectors
+
+Le `labels` sono utilizzate per creare gruppi che contengono entità dalle medesime caratteristiche.
+Più `label` vengono aggiunte all'entità, più finemente potrà essere eseguita la ricerca di gruppi di risorse specifiche.
+Le `labels` possono essere applicate a diversi tipi di oggetti: PODs, ReplicaSet, Services, Deployments...
+Una label ha il formato <chiave>:<valore>:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod-1
+  labels:
+    app: my-app-1
+    type: front-end
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx
+  nodeName: node-02
+```
+
+I `selectors` selezionano il gruppo che possiede tutte le labels a lui date e per vedere quali POD fanno parte di un gruppo:
+
+`kubectl get pods --selector <chiave>=<valore>`
+
+Se volessimo creare un ReplicaSet composto di 3 PODs aventi la label `type: front-end` nel loro YAML, dovremmo inserire sotto `spec/template/metadata/labels` la label `type: front-end` del POD che poi viene selezionata dal `matchLabels` in `selector`. Possiamo inserire tutte le label che ci servono per selezionare correttamente quanto ci serve. Quanto verrà selezionato dal `selectors` sarà l'entità che contiene tutte le `labels` indicate.
+Le `labels` all'interno di `metadata/labels` sono quelle che caratterizzano l'oggetto ReplicaSet e non sono collegate al POD.
+
+``` yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-rs-1
+  labels:
+    app: my-rs-app-1
+    type: front-end
+  annotations:
+    buildVersion: 1.34
+spec:
+  template:
+    metadata:
+      name: my-pod-1
+      labels:
+        app: my-app-1
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+```
+
+Le `annotations` permettono, invece, di aggiungere ulteriori dettagli utili, ma esse non vengono utilizzate altrove.
+
 
 [\[TOP\]](#kubernetes-notes)
 
