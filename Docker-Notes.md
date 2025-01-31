@@ -6,6 +6,17 @@
 2. [Comandi](./Docker-Notes.md#comandi-ctrlc-per-terminare)
 3. [Dockerfile -  1 linea = 1 nuovo livello/layer](./Docker-Notes.md#dockerfile----1-linea--1-nuovo-livellolayer)
    1. [Istruzioni Dockerfile](./Docker-Notes.md#istruzioni-dockerfile)
+   2. [HowTo - Creare una nuova immagine custom per un container](./Docker-Notes.md#howto---creare-una-nuova-immagine-custom-per-un-container)
+   3. [HowTo - Caricare la propria immagine custom su Docker Hub](./Docker-Notes.md#howto---caricare-la-propria-immagine-custom-su-docker-hub)
+4. [Docker Compose - Come installare un application stack](./Docker-Notes.md#docker-compose---come-installare-un-application-stack)
+   1. [Installazione (su Debian)](./Docker-Notes.md#installazione-su-debian)
+   2. [Utilizzo](./Docker-Notes.md#utilizzo)
+5. [Docker Registry](./Docker-Notes.md#docker-registry)
+6. [Docker Storage](./Docker-Notes.md#docker-storage)
+7. [Docker Network](./Docker-Notes.md#docker-network)
+8. [Container Orchestration](./Docker-Notes.md#container-orchestration)
+9. [Docker Swarm](./Docker-Notes.md#docker-swarm)
+10. [Kubernetes](./Docker-Notes.md#kubernetes)
 
 ## Le Basi
 
@@ -153,17 +164,18 @@ La versione di Docker Composer (v1, v2, v3) è specificabile alla prima linea de
 Con Docker si deve sempre pensare di dover raggiungere un host esterno, un server esterno e non il Localhost.
 
 
-## Installazione (su Debian) - [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
+## Installazione (su Debian)
 
-
+DOC: [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 
 1. `sudo curl -L "https://github.com/docker/compose/releases/download/1.26.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
 2. `sudo chmod +x /usr/local/bin/docker-compose`
 3. `cd /etc/bash_completion.d/`
 4. `sudo curl -L https://raw.githubusercontent.com/docker/compose/1.26.2/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose`
 
+## Utilizzo
 
-## Utilizzo - [https://docs.docker.com/compose/gettingstarted/](https://docs.docker.com/compose/gettingstarted/)
+DOC: [https://docs.docker.com/compose/gettingstarted/](https://docs.docker.com/compose/gettingstarted/)
 
 
 
