@@ -37,9 +37,10 @@
 33. [How to check certificate expiration](#how-to-check-certificate-expiration)
 34. [How to create self-signed certificate](#how-to-create-self-signed-certificate)
 35. [How to renew self-signed certificate without changing its key](#how-to-renew-self-signed-certificate-without-changing-its-key)
-36. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
-37. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
-38. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
+36. [How to encrypt key with OpenSSL](#how-to-encrypt-key-with-openssl)
+37. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
+38. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
+39. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -449,10 +450,15 @@ If you need to exclude only one thing:
 ### How to create self-signed certificate
 
 * `openssl req -newkey rsa:4096 -x509 -nodes -out $(hostname -f).crt -keyout $(hostname -f).key -days 3650 -subj "/CN=$(hostname -f)"`
+* `openssl req -newkey rsa:4096 -x509 -nodes -out $(hostname -f).crt -keyout $(hostname -f).key -days 3650 -subj "/CN=$(hostname -f)"` -addext "subjectAltName=DNS:srv1.example.org,DNS:srv2.example.org,DNS:srv3.example.org"
 
 ### How to renew self-signed certificate without changing its key
 
 * `openssl x509 -signkey key.pem -in certificate.pem -days 365 -out new_certificate.pem`
+
+### How to encrypt key with OpenSSL
+
+* `openssl rsa -aes256 -in example.key -out example-aes256.key`
 
 ### How to fix warning: setlocale: LC_ALL: cannot change locale
 
