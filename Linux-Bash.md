@@ -12,7 +12,7 @@
 8. [How to change the Hostname name](#how-to-change-the-hostname-name)
 9. [How to maintain SSH session open](#how-to-maintain-ssh-session-open)
 10. [How to download a file and save it on a specific path](#how-to-download-a-file-and-save-it-on-a-specific-path)
-11. [How to remove a file that starting with '-' or '--'](#how-to-find-specific-files-in-a-path-and-remove-them)
+11. [How to remove a file that starting with '-' or '--'](#how-to-remove-a-file-that-starting-with---or---)
 12. [How to find one or more files](#how-to-find-one-or-more-files)
 13. [How to upload a file or a directory on a SSH Server](#how-to-upload-a-file-or-a-directory-on-a-ssh-server)
 14. [How to find a service and kill it](#how-to-find-a-service-and-kill-it)
@@ -35,9 +35,11 @@
 31. [How to format an XML file](#how-to-format-an-xml-file)
 32. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
 33. [How to check certificate expiration](#how-to-check-certificate-expiration)
-34. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
-35. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
-36. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
+34. [How to create self-signed certificate](#how-to-create-self-signed-certificate)
+35. [How to renew self-signed certificate without changing its key](#how-to-renew-self---signed-certificate-without-changing-its-key)
+36. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
+37. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
+38. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -443,6 +445,14 @@ If you need to exclude only one thing:
 ### How to check certificate expiration
 
 * `openssl x509 -in certificate.pem -noout -dates`
+
+### How to create self-signed certificate
+
+* `openssl req -newkey rsa:4096 -x509 -nodes -out $(hostname -f).crt -keyout $(hostname -f).key -days 3650 -subj "/CN=$(hostname -f)"`
+
+### How to renew self-signed certificate without changing its key
+
+* `openssl x509 -signkey key.pem -in certificate.pem -days 365 -out new_certificate.pem`
 
 ### How to fix warning: setlocale: LC_ALL: cannot change locale
 
