@@ -36,7 +36,7 @@
 32. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
 33. [How to check certificate expiration](#how-to-check-certificate-expiration)
 34. [How to create self-signed certificate](#how-to-create-self-signed-certificate)
-35. [How to renew self-signed certificate without changing its key](#how-to-renew-self---signed-certificate-without-changing-its-key)
+35. [How to renew self-signed certificate without changing its key](#how-to-renew-self-signed-certificate-without-changing-its-key)
 36. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
 37. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
 38. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
