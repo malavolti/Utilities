@@ -34,9 +34,10 @@
 30. [How to copy text files without losing data](#how-to-copy-text-files-without-losing-data)
 31. [How to format an XML file](#how-to-format-an-xml-file)
 32. [How to check certificate on specific port](#how-to-check-certificate-on-specific-port)
-33. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
-34. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
-35. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
+33. [How to check certificate expiration](#how-to-check-certificate-expiration)
+34. [How to fix warning: setlocale: LC_ALL: cannot change locale](#how-to-fix-warning-setlocale-lc_all-cannot-change-locale)
+35. [How to add new GPG key for APT on Debian 11+](#how-to-add-new-gpg-key-for-apt-on-debian-11)
+36. [Howt to customize the prompt of Bash](#how-to-customize-the-prompt-of-bash)
 
 ### How to add a new user and provide SSH access to him 
 
@@ -438,6 +439,10 @@ If you need to exclude only one thing:
 ### How to check certificate on specific port
 
 * `openssl s_client -connect www.paypal.com:443`
+
+### How to check certificate expiration
+
+* `openssl x509 -in certificate.pem -noout -dates`
 
 ### How to fix warning: setlocale: LC_ALL: cannot change locale
 
