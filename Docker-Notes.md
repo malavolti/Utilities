@@ -112,6 +112,7 @@
 * `docker stop <CONTAINER-ID o CONTAINER-NAME>`: disattiva un container. \
   E' possibile fermare più container inserendo le prime 2 lettere di ogni CONTAINER-ID separate da uno spazio
 * `docker rm <CONTAINER-ID o CONTAINER-NAME>`: rimuove un container non attivo
+* `docker rm $(docker ps -qa)`: rimuove tutti i container non in esecuzione
 * `docker images`: elenca tutte le immagini disponibili
 * `docker rmi <IMAGE-NAME or IMAGE-ID>`: rimuove l'ultima versione dell'immagine indicata solo se non è usata da un container
 * `docker rmi -f <IMAGE-NAME or IMAGE-ID>`: rimuove l'immagine indicata forzatamente
