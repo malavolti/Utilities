@@ -47,7 +47,7 @@
 This example shows how to add the user "username" and enable him to SSH access.
 
 ```bash
-sudo useradd -m /home/username -g username -s /bin/bash
+sudo useradd --create-home --shell /bin/bash --user-group username
 sudo mkdir /home/username/.ssh
 sudo chown username:username /home/username/.ssh
 sudo chmod 0700 /home/username/.ssh
@@ -63,7 +63,7 @@ sudo systemctl reload ssh.service
 This example shows how to add the user "username" and enable him to SSH access.
 
 ```bash
-sudo useradd -m /home/username -g username -s /bin/bash --system
+sudo useradd --create-home --shell /bin/bash --user-group --system username
 sudo mkdir /home/username/.ssh
 sudo chown username:username /home/username/.ssh
 sudo chmod 0700 /home/username/.ssh
@@ -76,19 +76,22 @@ sudo systemctl reload ssh.service
 
 ### How to add/remove an user to 'sudo'(ROOT) user group
 
-```bash
-sudo usermod -a -G sudo username
-```
+- Add:
 
-```bash
-sudo gpasswd -d username sudo
-```
+  ```bash
+  sudo usermod -a -G sudo username
+  ```
+
+-  Remove:
+
+   ```bash
+   sudo gpasswd -d username sudo
+   ```
 
 ### How to remove an user from the system completely
 
 ```bash
-sudo apt install perl-modules
-sudo deluser --remove-home username
+sudo userdel username -r
 ```
 
 ### How to find out useful info of your machine
